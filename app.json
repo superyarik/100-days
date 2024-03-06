@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "100-days",
+    "name": "100 Days",
     "slug": "100-days",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,17 +12,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.westmorelandcreative.rule100"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.westmorelandcreative.rule100"
     },
     "web": {
       "bundler": "metro",
@@ -30,10 +30,38 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-build-properties",
+      ["@morrowdigital/watermelondb-expo-plugin"],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.6.10",
+            "packagingOptions": {
+              "pickFirst": ["**/libc++_shared.so"]
+            }
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "aea28682-d57c-489c-9b7b-96e907e72e61"
+      }
+    },
+    "owner": "rawestmoreland",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/aea28682-d57c-489c-9b7b-96e907e72e61"
     }
   }
 }
