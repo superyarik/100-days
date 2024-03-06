@@ -1,7 +1,7 @@
 import Colors from '@/constants/Colors';
 import { useDatabase } from '@/contexts/WaterMelonContext';
 import { Goal, Progress } from '@/watermelon/models';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 
@@ -66,6 +66,7 @@ export function ProgressGrid({
         <>
           <View
             style={{
+              width: '100%',
               justifyContent: 'space-between',
               flexDirection: 'row',
               alignItems: 'baseline',
@@ -111,10 +112,10 @@ export function ProgressGrid({
               })}
             </View>
           ))}
-          <Text style={{ marginTop: 20 }} variant='headlineSmall'>
-            Description:
-          </Text>
-          <Text variant='bodyMedium'>{description}</Text>
+          <View style={{ marginTop: 20, width: '100%' }}>
+            <Text variant='headlineSmall'>Description:</Text>
+            <Text variant='bodyMedium'>{description}</Text>
+          </View>
         </>
       )}
     </View>
@@ -123,11 +124,14 @@ export function ProgressGrid({
 
 const styles = StyleSheet.create({
   container: {
+    width: '95%',
+    alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
     gap: 8,
   },
   row: {
+    alignItems: 'center',
     flexDirection: 'row',
     gap: 8,
   },

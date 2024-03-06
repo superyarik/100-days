@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "100 Days",
-    "slug": "100-days",
+    "name": "Hundred Habits",
+    "slug": "hundred-habits",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -14,20 +14,15 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.westmorelandcreative.rule100"
+      "supportsTablet": false,
+      "bundleIdentifier": "com.westmorelandcreative.hundredhabits"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.westmorelandcreative.rule100"
-    },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "package": "com.westmorelandcreative.hundredhabits"
     },
     "plugins": [
       "expo-router",
@@ -53,7 +48,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "aea28682-d57c-489c-9b7b-96e907e72e61"
+        "projectId": "9e56f299-b0ca-494b-9b3b-7040a9521ed6"
       }
     },
     "owner": "rawestmoreland",
@@ -61,7 +56,7 @@
       "policy": "appVersion"
     },
     "updates": {
-      "url": "https://u.expo.dev/aea28682-d57c-489c-9b7b-96e907e72e61"
+      "url": "https://u.expo.dev/9e56f299-b0ca-494b-9b3b-7040a9521ed6"
     }
   }
 }

@@ -9,11 +9,8 @@ import * as Notifications from 'expo-notifications';
 import { DatabaseProvider } from '@/contexts/WaterMelonContext';
 import { PaperProvider } from 'react-native-paper';
 import {
-  cancelAllScheduledNotificationsAsync,
   getScheduledNotificationsAsync,
   requestPermissionsAsync,
-  scheduleNotification,
-  scheduleNotificationAndGetID,
 } from '@/services/notificationsService';
 
 export {
