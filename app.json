@@ -28,7 +28,6 @@
       "expo-router",
       "expo-build-properties",
       ["@morrowdigital/watermelondb-expo-plugin"],
-      ["expo-updates", { "username": "rawestmoreland" }],
       [
         "expo-build-properties",
         {
