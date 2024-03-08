@@ -2,7 +2,7 @@ import { ProgressGrid } from '@/components/ProgressGrid';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, FAB, Portal } from 'react-native-paper';
+import { ActivityIndicator, FAB, IconButton, Portal } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AddProgressModal } from '@/components/Modals/AddProgressModal';
@@ -110,6 +110,15 @@ export default function Page() {
         <ActivityIndicator color={Colors.brand.quaternary} />
       ) : (
         <>
+          <IconButton
+            icon='arrow-left'
+            style={{
+              position: 'absolute',
+              left: 16,
+              top: 54,
+            }}
+            onPress={() => router.back()}
+          />
           <Portal>
             <FAB.Group
               open={isFabGroupOpen}
