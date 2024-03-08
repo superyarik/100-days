@@ -110,7 +110,7 @@ export function AddProgressModal({
               mode='outlined'
               onPress={form.handleSubmit(onSubmit)}
             >
-              Create
+              Log it
             </Button>
             <Button
               textColor={Colors.brand.charcoal}

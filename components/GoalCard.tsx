@@ -1,48 +1,19 @@
 import Colors from '@/constants/Colors';
-import { useDatabase } from '@/contexts/WaterMelonContext';
 import { Goal, Progress } from '@/watermelon/models';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { router } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
 import { Platform, StyleSheet, View } from 'react-native';
-import { Text, Card, IconButton } from 'react-native-paper';
-import { DeleteGoalModal } from './Modals/DeleteGoalModal';
-import EnhancedEditGoalModal from './Modals/EditGoalModal';
+import { Text, Card } from 'react-native-paper';
 
 const GoalCard = ({
   goal,
   progresses,
-  isDeleteGoalModalVisible,
-  setIsDeleteGoalModalVisible,
 }: {
   goal: Goal;
   progresses: Progress[];
-  isDeleteGoalModalVisible: boolean;
-  setIsDeleteGoalModalVisible: (visible: boolean) => void;
 }) => {
-  const database = useDatabase();
-
-  const [isEditGoalModalVisible, setIsEditGoalModalVisible] = useState(false);
-
-  const handleDeleteGoal = async () => {
-    await database.write(async () => {
-      await goal.destroyPermanently();
-      await goal.progresses.destroyAllPermanently();
-    });
-    setIsDeleteGoalModalVisible(false);
-  };
-
-  const handleEditGoal = async (data: Record<string, any>) => {
-    await database.write(async () => {
-      await goal.update((goal) => {
-        goal.title = data.goalTitle;
-        goal.description = data.goalDescription || '';
-      });
-    });
-    setIsEditGoalModalVisible(false);
-  };
-
   const createdAt = useMemo(() => {
     const dateOptions = {
       year: 'numeric',
@@ -118,38 +89,7 @@ const GoalCard = ({
             </View>
           </View>
         </Card.Content>
-        <Card.Actions>
-          <IconButton
-            onPress={() => setIsEditGoalModalVisible(true)}
-            mode='outlined'
-            containerColor={Colors.brand.primary}
-            style={{ borderWidth: 2, borderColor: Colors.brand.charcoal }}
-            icon='pencil'
-            iconColor={Colors.brand.charcoal}
-          />
-          <IconButton
-            mode='outlined'
-            containerColor={Colors.brand.primary}
-            style={{ borderWidth: 2, borderColor: Colors.brand.charcoal }}
-            animated
-            onPress={() => setIsDeleteGoalModalVisible(true)}
-            icon='delete'
-            iconColor={Colors.brand.charcoal}
-          />
-        </Card.Actions>
       </Card>
-      <DeleteGoalModal
-        visible={isDeleteGoalModalVisible}
-        handleDeleteGoal={handleDeleteGoal}
-        handleClose={() => setIsDeleteGoalModalVisible(false)}
-      />
-      <EnhancedEditGoalModal
-        database={database}
-        visible={isEditGoalModalVisible}
-        handleClose={() => setIsEditGoalModalVisible(false)}
-        goalId={goal.id}
-        handleEditGoal={handleEditGoal}
-      />
     </>
   );
 };
@@ -166,7 +106,7 @@ export default EnhancedGoalCard;
 const styles = StyleSheet.create({
   outerCard: {
     borderWidth: 2,
-    backgroundColor: Colors.brand.serenade,
+    backgroundColor: Colors.brand.powderBlue,
     padding: 0,
     marginVertical: 8,
     marginHorizontal: 16,

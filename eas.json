@@ -27,7 +27,8 @@
       },
       "env": {
         "APP_ENV": "development"
-      }
+      },
+      "channel": "development-simulator"
     },
     "preview": {
       "channel": "preview",

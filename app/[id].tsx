@@ -2,13 +2,15 @@ import { ProgressGrid } from '@/components/ProgressGrid';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView, StyleSheet, View } from 'react-native';
-import { FAB } from 'react-native-paper';
+import { ActivityIndicator, FAB, Portal } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AddProgressModal } from '@/components/Modals/AddProgressModal';
 import { useDatabase } from '@/contexts/WaterMelonContext';
 import { Goal, Progress } from '@/watermelon/models';
 import { EditProgressModal } from '@/components/Modals/EditProgressModal';
+import { DeleteGoalModal } from '@/components/Modals/DeleteGoalModal';
+import EnhancedEditGoalModal from '@/components/Modals/EditGoalModal';
 
 export default function Page() {
   const database = useDatabase();
@@ -17,10 +19,41 @@ export default function Page() {
   const [goal, setGoal] = useState<Goal | null>(null);
   const [goalProgress, setGoalProgress] = useState<Progress[]>([]);
 
+  const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
+
   // We store the tapped cell number in this state
   const [activeCellNumber, setActiveCellNumber] = useState<number | null>(null);
 
   const [editingProgress, setEditingProgress] = useState<Progress | null>(null);
+
+  const [isEditGoalModalVisible, setIsEditGoalModalVisible] = useState(false);
+  const [isDeleteGoalModalVisible, setIsDeleteGoalModalVisible] =
+    useState(false);
+
+  const handleDeleteGoal = async (goal: Goal) => {
+    await database.write(async () => {
+      await goal.destroyPermanently();
+      await goal.progresses.destroyAllPermanently();
+    });
+    setIsDeleteGoalModalVisible(false);
+    router.navigate('/');
+  };
+
+  const handleEditGoal = async ({
+    data,
+    goal,
+  }: {
+    data: Record<string, any>;
+    goal: Goal;
+  }) => {
+    await database.write(async () => {
+      await goal.update((goal) => {
+        goal.title = data.goalTitle;
+        goal.description = data.goalDescription || '';
+      });
+    });
+    setIsEditGoalModalVisible(false);
+  };
 
   const handleAddProgress = async ({
     description,
@@ -73,34 +106,83 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styles.mainContainer}>
-      <FAB
-        mode='flat'
-        style={[styles.fab, { zIndex: 10 }]}
-        color={Colors.brand.charcoal}
-        icon='arrow-left'
-        size='medium'
-        aria-label='Add a goal'
-        onPress={() => router.back()}
-        rippleColor={Colors.brand.secondary}
-      />
-      <ProgressGrid
-        goal={goal}
-        goalProgress={goalProgress}
-        description={description}
-        setSelectedCell={setActiveCellNumber}
-        setEditingProgress={setEditingProgress}
-      />
-      <AddProgressModal
-        visible={activeCellNumber !== null}
-        handleSubmitProgress={handleSubmitProgress}
-        handleClose={() => setActiveCellNumber(null)}
-      />
-      <EditProgressModal
-        visible={editingProgress !== null}
-        handleClose={() => setEditingProgress(null)}
-        handleEditProgress={handleEditProgress}
-        progress={editingProgress}
-      />
+      {!goal ? (
+        <ActivityIndicator color={Colors.brand.quaternary} />
+      ) : (
+        <>
+          <Portal>
+            <FAB.Group
+              open={isFabGroupOpen}
+              visible
+              variant='secondary'
+              fabStyle={styles.fab}
+              style={{
+                shadowColor: Colors.brand.charcoal,
+                shadowOffset: { width: 2, height: 2 },
+                shadowRadius: 0,
+                shadowOpacity: 1,
+              }}
+              onStateChange={({ open }) => setIsFabGroupOpen(open)}
+              actions={[
+                {
+                  icon: 'pencil',
+                  label: 'Edit goal',
+                  style: { backgroundColor: Colors.brand.primary },
+                  onPress: () => setIsEditGoalModalVisible(true),
+                },
+                {
+                  icon: 'trash-can',
+                  label: 'Delete goal',
+                  style: { backgroundColor: Colors.brand.primary },
+                  onPress: () => setIsDeleteGoalModalVisible(true),
+                },
+                {
+                  icon: 'arrow-left',
+                  label: 'Back',
+                  style: { backgroundColor: Colors.brand.primary },
+                  onPress: () => router.back(),
+                },
+              ]}
+              color={Colors.brand.charcoal}
+              icon='dots-horizontal'
+              aria-label='Add a goal'
+              rippleColor={Colors.brand.secondary}
+            />
+          </Portal>
+          <ProgressGrid
+            goal={goal}
+            goalProgress={goalProgress}
+            description={description}
+            setSelectedCell={setActiveCellNumber}
+            setEditingProgress={setEditingProgress}
+          />
+          <AddProgressModal
+            visible={activeCellNumber !== null}
+            handleSubmitProgress={handleSubmitProgress}
+            handleClose={() => setActiveCellNumber(null)}
+          />
+          <EditProgressModal
+            visible={editingProgress !== null}
+            handleClose={() => setEditingProgress(null)}
+            handleEditProgress={handleEditProgress}
+            progress={editingProgress}
+          />
+          <DeleteGoalModal
+            visible={isDeleteGoalModalVisible}
+            handleDeleteGoal={() => handleDeleteGoal(goal)}
+            handleClose={() => setIsDeleteGoalModalVisible(false)}
+          />
+          <EnhancedEditGoalModal
+            database={database}
+            visible={isEditGoalModalVisible}
+            handleClose={() => setIsEditGoalModalVisible(false)}
+            goalId={goal.id}
+            handleEditGoal={(data: Record<string, any>) =>
+              handleEditGoal({ data, goal })
+            }
+          />
+        </>
+      )}
     </SafeAreaView>
   );
 }
@@ -117,10 +199,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 3 },
     shadowOpacity: 1,
     borderWidth: 2,
+    shadowRadius: 0,
     borderColor: Colors.brand.charcoal,
     backgroundColor: Colors.brand.primary,
-    position: 'absolute',
-    top: 56,
-    left: 16,
   },
 });
