@@ -9,10 +9,6 @@ import { AddProgressModal } from '@/components/Modals/AddProgressModal';
 import { useDatabase } from '@/contexts/WaterMelonContext';
 import { Goal, Progress } from '@/watermelon/models';
 import { EditProgressModal } from '@/components/Modals/EditProgressModal';
-import {
-  GestureHandlerRootView,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
 
 export default function Page() {
   const database = useDatabase();
@@ -76,7 +72,7 @@ export default function Page() {
   }, [goal]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.mainContainer}>
       <FAB
         mode='flat'
         style={[styles.fab, { zIndex: 10 }]}
@@ -110,7 +106,7 @@ export default function Page() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
     flex: 1,
     backgroundColor: Colors.brand.cream,
     alignItems: 'center',

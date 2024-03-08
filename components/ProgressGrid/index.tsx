@@ -1,9 +1,15 @@
 import Colors from '@/constants/Colors';
-import { useDatabase } from '@/contexts/WaterMelonContext';
 import { Goal, Progress } from '@/watermelon/models';
 import { useMemo, useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
+
+const GRID_SIZE = 10;
+const MARGIN = 20;
+const { width } = Dimensions.get('window');
+const totalSquareMargins = 4 * GRID_SIZE;
+const gridWidth = width - MARGIN * 2 - totalSquareMargins;
+const squareSize = gridWidth / GRID_SIZE;
 
 export function ProgressGrid({
   goal,
@@ -18,8 +24,6 @@ export function ProgressGrid({
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
 }) {
-  const database = useDatabase();
-
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleCellPress = async (
@@ -52,14 +56,34 @@ export function ProgressGrid({
     return Math.max(...goalProgress.map((gp: Progress) => gp.cellNumber));
   }, [goalProgress]);
 
-  const deleteAllProgress = async () => {
-    await database.write(async () => {
-      await database.get('progresses').query().destroyAllPermanently();
-    });
-  };
+  const GridSquare = ({
+    disabled,
+    color,
+    borderColor,
+    onPress,
+  }: {
+    onPress: () => void;
+    disabled: boolean;
+    color: string;
+    borderColor: string;
+  }) => (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={[
+        styles.square,
+        {
+          width: squareSize,
+          height: squareSize,
+          borderColor,
+          backgroundColor: color,
+        },
+      ]}
+    />
+  );
 
   return (
-    <View style={styles.container}>
+    <View style={styles.gridContainer}>
       {!goal ? (
         <ActivityIndicator color={Colors.brand.quaternary} />
       ) : (
@@ -79,39 +103,32 @@ export function ProgressGrid({
               {`${Math.floor((goalProgress.length / 100) * 100)} %`}
             </Text>
           </View>
-          {Array.from({ length: 10 }).map((_, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-              {Array.from({ length: 10 }).map((_, colIndex) => {
-                const cellNumber = Number(`${rowIndex}${colIndex}`);
-                const cellDisabled = Boolean(goalProgress.length)
-                  ? cellNumber > lastCheckedCell + 1
-                  : cellNumber !== 0;
-                const cellCompleted = goalProgress.some(
-                  (p: Progress) => p.cellNumber === cellNumber
-                );
-                return (
-                  <Pressable
-                    key={colIndex}
-                    disabled={cellDisabled}
-                    onPress={() => handleCellPress(cellNumber, cellCompleted)}
-                    style={[
-                      styles.cell,
-                      {
-                        backgroundColor: cellCompleted
-                          ? Colors.brand.quaternary
-                          : Colors.brand.cream,
-                        borderColor: cellCompleted
-                          ? Colors.brand.quaternary
-                          : cellDisabled
-                          ? 'gray'
-                          : Colors.brand.charcoal,
-                      },
-                    ]}
-                  />
-                );
-              })}
-            </View>
-          ))}
+          {Array.from({ length: GRID_SIZE * GRID_SIZE }).map((_, index) => {
+            const cellNumber = index;
+            const cellDisabled = Boolean(goalProgress.length)
+              ? cellNumber > lastCheckedCell + 1
+              : cellNumber !== 0;
+            const cellCompleted = goalProgress.some(
+              (p: Progress) => p.cellNumber === cellNumber
+            );
+            return (
+              <GridSquare
+                key={index}
+                onPress={() => handleCellPress(cellNumber, cellCompleted)}
+                disabled={cellDisabled}
+                color={
+                  cellCompleted ? Colors.brand.quaternary : Colors.brand.cream
+                }
+                borderColor={
+                  cellCompleted
+                    ? Colors.brand.quaternary
+                    : cellDisabled
+                    ? 'gray'
+                    : Colors.brand.charcoal
+                }
+              />
+            );
+          })}
           <View style={{ marginTop: 20, width: '100%' }}>
             <Text variant='headlineSmall'>Description:</Text>
             <Text variant='bodyMedium'>{description}</Text>
@@ -123,27 +140,23 @@ export function ProgressGrid({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    width: '95%',
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    gap: 8,
-  },
-  row: {
-    alignItems: 'center',
+  gridContainer: {
     flexDirection: 'row',
-    gap: 8,
+    flexWrap: 'wrap',
+    width: squareSize * GRID_SIZE + totalSquareMargins,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: MARGIN,
   },
-  cell: {
-    width: 30,
-    height: 30,
-    borderRadius: 4,
+  square: {
+    margin: 2,
+    backgroundColor: '#ddd',
     borderWidth: 2,
-    borderColor: Colors.brand.charcoal,
-    shadowColor: Colors.brand.charcoal,
-    shadowOpacity: 1,
-    shadowRadius: 0,
-    shadowOffset: { width: 2, height: 2 },
+    borderRadius: 4,
+  },
+  text: {
+    width: squareSize * GRID_SIZE,
+    marginHorizontal: MARGIN,
+    textAlign: 'center',
   },
 });
