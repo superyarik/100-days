@@ -24,7 +24,12 @@ export function DeleteAllModal({
         }}
       >
         <View style={{ gap: 24 }}>
-          <Text variant='headlineMedium'>You sure?</Text>
+          <Text
+            variant='headlineMedium'
+            style={{ color: Colors.brand.charcoal }}
+          >
+            You sure?
+          </Text>
           <Text variant='bodyLarge' style={{ color: Colors.brand.charcoal }}>
             Are you sure you want to delete everything? This is irreversible.
           </Text>

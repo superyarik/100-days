@@ -24,8 +24,13 @@ export function DisableNotificationsModal({
         }}
       >
         <View style={{ gap: 24 }}>
-          <Text variant='headlineMedium'>You sure?</Text>
-          <Text variant='bodyLarge'>
+          <Text
+            variant='headlineMedium'
+            style={{ color: Colors.brand.charcoal }}
+          >
+            You sure?
+          </Text>
+          <Text variant='bodyLarge' style={{ color: Colors.brand.charcoal }}>
             Are you sure you want to turn off all notifications?
           </Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
