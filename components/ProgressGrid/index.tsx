@@ -3,6 +3,7 @@ import { Goal, Progress } from '@/watermelon/models';
 import { useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
+import { ProgressSquare } from './ProgressSquare';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -56,32 +57,6 @@ export function ProgressGrid({
     return Math.max(...goalProgress.map((gp: Progress) => gp.cellNumber));
   }, [goalProgress]);
 
-  const GridSquare = ({
-    disabled,
-    color,
-    borderColor,
-    onPress,
-  }: {
-    onPress: () => void;
-    disabled: boolean;
-    color: string;
-    borderColor: string;
-  }) => (
-    <Pressable
-      onPress={onPress}
-      disabled={disabled}
-      style={[
-        styles.square,
-        {
-          width: squareSize,
-          height: squareSize,
-          borderColor,
-          backgroundColor: color,
-        },
-      ]}
-    />
-  );
-
   return (
     <View style={styles.gridContainer}>
       {!goal ? (
@@ -112,10 +87,11 @@ export function ProgressGrid({
               (p: Progress) => p.cellNumber === cellNumber
             );
             return (
-              <GridSquare
+              <ProgressSquare
                 key={index}
                 onPress={() => handleCellPress(cellNumber, cellCompleted)}
                 disabled={cellDisabled}
+                squareSize={squareSize}
                 color={
                   cellCompleted ? Colors.brand.quaternary : Colors.brand.cream
                 }
@@ -147,12 +123,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: MARGIN,
-  },
-  square: {
-    margin: 2,
-    backgroundColor: '#ddd',
-    borderWidth: 2,
-    borderRadius: 4,
   },
   text: {
     width: squareSize * GRID_SIZE,
