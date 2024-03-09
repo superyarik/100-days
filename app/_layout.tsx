@@ -7,7 +7,10 @@ import { useEffect, useRef, useState } from 'react';
 import * as Notifications from 'expo-notifications';
 
 import { DatabaseProvider } from '@/contexts/WaterMelonContext';
-import { PaperProvider } from 'react-native-paper';
+import {
+  PaperProvider,
+  MD3LightTheme as DefaultTheme,
+} from 'react-native-paper';
 import {
   getScheduledNotificationsAsync,
   requestPermissionsAsync,
@@ -103,7 +106,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
   return (
     <DatabaseProvider>
-      <PaperProvider>
+      <PaperProvider theme={DefaultTheme}>
         <Stack>
           <Stack.Screen name='(tabs)' options={{ headerShown: false }} />
           <Stack.Screen
