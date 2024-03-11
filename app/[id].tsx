@@ -186,8 +186,8 @@ export default function Page() {
             visible={isEditGoalModalVisible}
             handleClose={() => setIsEditGoalModalVisible(false)}
             goalId={goal.id}
-            handleEditGoal={(data: Record<string, any>) =>
-              handleEditGoal({ data, goal })
+            handleEditGoal={async (data: Record<string, any>) =>
+              await handleEditGoal({ data, goal })
             }
           />
         </>

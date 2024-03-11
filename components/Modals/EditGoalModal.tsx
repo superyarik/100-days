@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { Platform, View } from 'react-native';
 import {
   Portal,
   Modal,
@@ -25,6 +25,11 @@ import { NotificationModal } from './NotificationModal';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { Database } from '@nozbe/watermelondb';
 import { useFocusEffect } from 'expo-router';
+import {
+  IosAuthorizationStatus,
+  PermissionStatus,
+  getPermissionsAsync,
+} from 'expo-notifications';
 
 function EditGoalModal({
   visible,
@@ -61,18 +66,25 @@ function EditGoalModal({
     useState(false);
 
   const handleReminderChange = async (value: boolean) => {
-    const canNotify: boolean = await requestPermissionsAsync();
-
-    if (canNotify) {
-      setReminders(value);
-      if (value === false) {
-        await cancelScheduledNotificationAsync(goal.notificationId);
-        await database.write(async () => {
-          await goal.update((g: Goal) => {
-            g.notificationId = '';
-          });
+    if (value === false) {
+      await cancelScheduledNotificationAsync(goal.notificationId);
+      await database.write(async () => {
+        await goal.update((g: Goal) => {
+          g.notificationId = '';
         });
+      });
+    } else {
+      const res = await getPermissionsAsync();
+
+      if (
+        res.status !== 'granted' ||
+        (Platform.OS === 'ios' &&
+          (res.ios?.status === IosAuthorizationStatus.NOT_DETERMINED ||
+            res.ios?.status === IosAuthorizationStatus.DENIED))
+      ) {
+        setIsNotificationModalVisible(true);
       } else {
+        setReminders(value);
         await database.write(async () => {
           const notificationId = await scheduleNotificationAndGetID({
             goalName: goal.title,
@@ -82,8 +94,6 @@ function EditGoalModal({
           });
         });
       }
-    } else {
-      setIsNotificationModalVisible(true);
     }
   };
 
