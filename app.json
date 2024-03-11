@@ -53,9 +53,10 @@
     },
     "owner": "rawestmoreland",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     },
     "updates": {
+      "enabled": true,
       "url": "https://u.expo.dev/9e56f299-b0ca-494b-9b3b-7040a9521ed6"
     }
   }
