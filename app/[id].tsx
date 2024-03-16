@@ -161,7 +161,7 @@ export default function Page() {
           <ProgressGrid
             goal={goal}
             goalProgress={goalProgress}
-            description={description}
+            description={goal.description}
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
           />
