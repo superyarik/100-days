@@ -11,6 +11,11 @@ import { Goal, Progress } from '@/watermelon/models';
 import { EditProgressModal } from '@/components/Modals/EditProgressModal';
 import { DeleteGoalModal } from '@/components/Modals/DeleteGoalModal';
 import EnhancedEditGoalModal from '@/components/Modals/EditGoalModal';
+import {
+  cancelScheduledNotificationAsync,
+  requestPermissionsAsync,
+  scheduleNotificationAndGetID,
+} from '@/services/notificationsService';
 
 export default function Page() {
   const database = useDatabase();
@@ -46,6 +51,7 @@ export default function Page() {
     data: Record<string, any>;
     goal: Goal;
   }) => {
+    const oldTitle = goal.title;
     await database.write(async () => {
       await goal.update((goal) => {
         goal.title = data.goalTitle;
@@ -53,6 +59,26 @@ export default function Page() {
       });
     });
     setIsEditGoalModalVisible(false);
+
+    // If the user has granted permissions to send notifications and the goal title has changed
+    if (Boolean(goal.notificationId) && data.goalTitle !== oldTitle) {
+      // Check if the user has granted permissions to send notifications
+      const canNotify: boolean = await requestPermissionsAsync();
+      if (!canNotify) return;
+      // Cancel the old alert
+      await cancelScheduledNotificationAsync(goal.notificationId);
+      // Schedule a new alert with the new goal title and the same hour
+      const notificationId = await scheduleNotificationAndGetID({
+        goalName: data.goalTitle,
+        hour: goal.notificationHour,
+      });
+      // Update the goal with the new notification ID
+      await database.write(async () => {
+        await goal.update((g: Goal) => {
+          g.notificationId = notificationId;
+        });
+      });
+    }
   };
 
   const handleAddProgress = async ({
