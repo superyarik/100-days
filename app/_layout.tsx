@@ -20,6 +20,7 @@ import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 import en from '@/services/i18n/en-US.json';
 import pt from '@/services/i18n/pt.json';
+import { AppState, Platform } from 'react-native';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -59,6 +60,25 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/Lexend.ttf'),
     ...FontAwesome.font,
   });
+
+  // AppState subscription
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+
+    // Any time the app state changes, get the new locale and set it.
+    const _handleAppStateChange = () => {
+      setLanguage(Localization.getLocales()?.[0]?.languageTag ?? 'en-US');
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      _handleAppStateChange
+    );
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
