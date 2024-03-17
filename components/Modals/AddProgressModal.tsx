@@ -3,6 +3,7 @@ import { Portal, Modal, Text, Button, TextInput } from 'react-native-paper';
 import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
+import { useTranslation } from 'react-i18next';
 
 export function AddProgressModal({
   visible,
@@ -13,6 +14,7 @@ export function AddProgressModal({
   handleSubmitProgress: (data: any) => Promise<void>;
   handleClose: () => void;
 }) {
+  const { t } = useTranslation();
   const form = useForm({
     defaultValues: {
       progressDescription: '',
@@ -45,7 +47,7 @@ export function AddProgressModal({
             variant='titleLarge'
             style={{ color: Colors.brand.charcoal, fontWeight: '600' }}
           >
-            Log your progress
+            {t('logYourProgress')}
           </Text>
           <View style={{ gap: 4, marginVertical: 16 }}>
             <View>
@@ -53,7 +55,10 @@ export function AddProgressModal({
                 control={form.control}
                 rules={{
                   required: false,
-                  max: { value: 160, message: 'Max length is 160 characters' },
+                  max: {
+                    value: 160,
+                    message: t('formValidation.maxLength', { count: 160 }),
+                  },
                 }}
                 name='progressDescription'
                 render={({ field }) => (
@@ -62,9 +67,9 @@ export function AddProgressModal({
                     multiline
                     returnKeyLabel='done'
                     returnKeyType='done'
-                    label={'Description'}
+                    label={t('description')}
                     onBlur={field.onBlur}
-                    placeholder='Description (optional)'
+                    placeholder={t('descriptionOptional')}
                     outlineStyle={{
                       borderWidth: 2,
                       borderColor: Colors.brand.charcoal,
@@ -88,7 +93,8 @@ export function AddProgressModal({
               {form.formState.errors.progressDescription && (
                 <InputError
                   message={
-                    form.formState.errors.progressDescription.message ?? 'Error'
+                    form.formState.errors.progressDescription.message ??
+                    t('error')
                   }
                 />
               )}
@@ -110,7 +116,7 @@ export function AddProgressModal({
               mode='outlined'
               onPress={form.handleSubmit(onSubmit)}
             >
-              Log it
+              {t('logIt')}
             </Button>
             <Button
               textColor={Colors.brand.charcoal}
@@ -130,7 +136,7 @@ export function AddProgressModal({
                 handleClose();
               }}
             >
-              Close
+              {t('close')}
             </Button>
           </View>
         </View>

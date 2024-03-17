@@ -16,7 +16,6 @@ import { useCallback, useMemo, useState } from 'react';
 import { useDatabase } from '@/contexts/WaterMelonContext';
 import {
   cancelScheduledNotificationAsync,
-  requestPermissionsAsync,
   scheduleNotificationAndGetID,
 } from '@/services/notificationsService';
 import { SelectList } from 'react-native-dropdown-select-list';
@@ -27,9 +26,9 @@ import { Database } from '@nozbe/watermelondb';
 import { useFocusEffect } from 'expo-router';
 import {
   IosAuthorizationStatus,
-  PermissionStatus,
   getPermissionsAsync,
 } from 'expo-notifications';
+import { useTranslation } from 'react-i18next';
 
 function EditGoalModal({
   visible,
@@ -42,6 +41,8 @@ function EditGoalModal({
   handleEditGoal: (data: any) => void;
   handleClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   const database = useDatabase();
   const form = useForm({
     defaultValues: {
@@ -149,15 +150,21 @@ function EditGoalModal({
             variant='titleLarge'
             style={{ color: Colors.brand.charcoal, fontWeight: '600' }}
           >
-            Edit {goal.title}
+            {t('editGoalName', { title: goal.title })}
           </Text>
           <View style={{ gap: 4, marginVertical: 16 }}>
             <View>
               <Controller
                 control={form.control}
                 rules={{
-                  required: { value: true, message: 'Title is required' },
-                  max: { value: 60, message: 'Max length is 60 characters' },
+                  required: {
+                    value: true,
+                    message: t('formValidation.titleRequired'),
+                  },
+                  max: {
+                    value: 60,
+                    message: t('formValidation.maxLength', { count: 60 }),
+                  },
                 }}
                 name='goalTitle'
                 render={({ field }) => (
@@ -172,7 +179,7 @@ function EditGoalModal({
                     error={Boolean(form.formState.errors.goalTitle?.message)}
                     activeOutlineColor={Colors.brand.charcoal}
                     mode='outlined'
-                    label='Title'
+                    label={t('title')}
                     value={field.value}
                     onChangeText={field.onChange}
                   />
@@ -180,7 +187,9 @@ function EditGoalModal({
               />
               {form.formState.errors.goalTitle && (
                 <InputError
-                  message={form.formState.errors.goalTitle.message ?? 'Error'}
+                  message={
+                    form.formState.errors.goalTitle.message ?? t('error')
+                  }
                 />
               )}
             </View>
@@ -196,7 +205,7 @@ function EditGoalModal({
                     numberOfLines={4}
                     returnKeyLabel='done'
                     returnKeyType='done'
-                    label={'Description'}
+                    label={t('description')}
                     onBlur={field.onBlur}
                     outlineStyle={{
                       borderWidth: 2,
@@ -221,7 +230,7 @@ function EditGoalModal({
               {form.formState.errors.goalDescription && (
                 <InputError
                   message={
-                    form.formState.errors.goalDescription.message ?? 'Error'
+                    form.formState.errors.goalDescription.message ?? t('error')
                   }
                 />
               )}
@@ -229,7 +238,7 @@ function EditGoalModal({
           </View>
           <Divider />
           <View style={{ marginVertical: 10, gap: 5 }}>
-            <Text style={{ fontWeight: '600' }}>Reminders:</Text>
+            <Text style={{ fontWeight: '600' }}>{t('reminder_other')}:</Text>
             <View
               style={{ gap: 8, flexDirection: 'row', alignItems: 'center' }}
             >
@@ -239,7 +248,7 @@ function EditGoalModal({
                 color={Colors.brand.secondary}
               />
               <Text style={{ fontWeight: '600' }}>
-                {reminders ? 'Enabled' : 'Disabled'}
+                {reminders ? t('enabled') : t('disabled')}
               </Text>
             </View>
           </View>
@@ -282,7 +291,7 @@ function EditGoalModal({
               mode='outlined'
               onPress={form.handleSubmit(handleEditGoal)}
             >
-              Update
+              {t('update')}
             </Button>
             <Button
               textColor={Colors.brand.charcoal}
@@ -299,7 +308,7 @@ function EditGoalModal({
               mode='outlined'
               onPress={handleClose}
             >
-              Close
+              {t('close')}
             </Button>
           </View>
         </View>

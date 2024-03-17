@@ -27,6 +27,7 @@
     "plugins": [
       "expo-router",
       "expo-build-properties",
+      ["expo-localization"],
       ["@morrowdigital/watermelondb-expo-plugin"],
       [
         "expo-build-properties",
@@ -38,7 +39,8 @@
             }
           }
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

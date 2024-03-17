@@ -3,6 +3,7 @@ import { Goal, Progress } from '@/watermelon/models';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { router } from 'expo-router';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Platform, StyleSheet, View } from 'react-native';
 import { Text, Card } from 'react-native-paper';
@@ -14,6 +15,8 @@ const GoalCard = ({
   goal: Goal;
   progresses: Progress[];
 }) => {
+  const { t } = useTranslation();
+
   const createdAt = useMemo(() => {
     const dateOptions = {
       year: 'numeric',
@@ -24,6 +27,17 @@ const GoalCard = ({
     // @ts-ignore
     return new Date(goal.createdAt).toLocaleDateString('en-US', dateOptions);
   }, [goal.createdAt]);
+
+  const updatedAt = useMemo(() => {
+    const dateOptions = {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    };
+
+    // @ts-ignore
+    return new Date(goal.updatedAt).toLocaleDateString('en-US', dateOptions);
+  }, [goal.updatedAt]);
 
   return (
     <>
@@ -56,7 +70,7 @@ const GoalCard = ({
                 <Text
                   style={{ color: Colors.brand.charcoal, fontWeight: '800' }}
                 >
-                  Progress:
+                  {t('progress')}:
                 </Text>
                 <Text style={{ color: Colors.brand.charcoal }}>
                   {`${Math.floor((progresses.length / 100) * 100)} %`}
@@ -68,10 +82,10 @@ const GoalCard = ({
                 <Text
                   style={{ color: Colors.brand.charcoal, fontWeight: '800' }}
                 >
-                  Updated:
+                  {t('updated')}:
                 </Text>
                 <Text style={{ color: Colors.brand.charcoal }}>
-                  {createdAt}
+                  {updatedAt}
                 </Text>
               </View>
             </View>
@@ -80,7 +94,7 @@ const GoalCard = ({
                 <Text
                   style={{ color: Colors.brand.charcoal, fontWeight: '800' }}
                 >
-                  Created:
+                  {t('created')}:
                 </Text>
                 <Text style={{ color: Colors.brand.charcoal }}>
                   {createdAt}
