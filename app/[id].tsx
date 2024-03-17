@@ -16,8 +16,10 @@ import {
   requestPermissionsAsync,
   scheduleNotificationAndGetID,
 } from '@/services/notificationsService';
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+  const { t } = useTranslation();
   const database = useDatabase();
   const { id, description } = useLocalSearchParams();
 
@@ -161,33 +163,33 @@ export default function Page() {
               actions={[
                 {
                   icon: 'pencil',
-                  label: 'Edit goal',
+                  label: t('editGoal'),
                   style: { backgroundColor: Colors.brand.primary },
                   onPress: () => setIsEditGoalModalVisible(true),
                 },
                 {
                   icon: 'trash-can',
-                  label: 'Delete goal',
+                  label: t('deleteGoal'),
                   style: { backgroundColor: Colors.brand.primary },
                   onPress: () => setIsDeleteGoalModalVisible(true),
                 },
                 {
                   icon: 'arrow-left',
-                  label: 'Back',
+                  label: t('back'),
                   style: { backgroundColor: Colors.brand.primary },
                   onPress: () => router.back(),
                 },
               ]}
               color={Colors.brand.charcoal}
               icon='dots-horizontal'
-              aria-label='Add a goal'
+              aria-label={t('addAGoal')}
               rippleColor={Colors.brand.secondary}
             />
           </Portal>
           <ProgressGrid
             goal={goal}
             goalProgress={goalProgress}
-            description={description}
+            description={goal.description}
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
           />
@@ -212,8 +214,8 @@ export default function Page() {
             visible={isEditGoalModalVisible}
             handleClose={() => setIsEditGoalModalVisible(false)}
             goalId={goal.id}
-            handleEditGoal={(data: Record<string, any>) =>
-              handleEditGoal({ data, goal })
+            handleEditGoal={async (data: Record<string, any>) =>
+              await handleEditGoal({ data, goal })
             }
           />
         </>

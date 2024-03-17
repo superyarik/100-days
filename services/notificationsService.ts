@@ -3,7 +3,6 @@ import * as Notifications from 'expo-notifications';
 export async function requestPermissionsAsync(): Promise<boolean> {
   const { status } = await Notifications.requestPermissionsAsync();
   if (status !== 'granted') {
-    alert('Allow 100 Days to send notifications?');
     return false;
   }
   return true;

@@ -9,8 +9,11 @@ import { AddGoalModal } from '@/components/Modals/AddGoalModal';
 import Colors from '@/constants/Colors';
 import { scheduleNotificationAndGetID } from '@/services/notificationsService';
 import useObserveGoals from '@/hooks/useObserveGoals';
+import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/contexts/I18nContext';
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const database = useDatabase();
 
   const goalsObservable = useMemo(() => {
@@ -54,7 +57,7 @@ export default function HomeScreen() {
   };
 
   const noGoals = useMemo(() => {
-    return !goals || !goals.length;
+    return !goals || !goals?.length;
   }, [goals]);
   return (
     <SafeAreaView
@@ -87,7 +90,7 @@ export default function HomeScreen() {
             style={styles.fab}
             color={Colors.brand.charcoal}
             icon='plus'
-            aria-label='Add a goal'
+            aria-label={t('addGoal')}
             onPress={toggleAddGoalModal}
             rippleColor={Colors.brand.secondary}
           />

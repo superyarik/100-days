@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
 import { Progress } from '@/watermelon/models';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export function EditProgressModal({
   visible,
@@ -17,6 +18,8 @@ export function EditProgressModal({
   handleClose: () => void;
   progress?: Progress | null;
 }) {
+  const { t } = useTranslation();
+
   if (!progress) return null;
 
   const form = useForm({
@@ -56,16 +59,19 @@ export function EditProgressModal({
             variant='titleLarge'
             style={{ color: Colors.brand.charcoal, fontWeight: '600' }}
           >
-            Update your progress
+            {t('updateYourProgress')}
           </Text>
-          <Text>Completed: {completedDate}</Text>
+          <Text>{t('completedDate', { date: completedDate })}</Text>
           <View style={{ gap: 4, marginVertical: 16 }}>
             <View>
               <Controller
                 control={form.control}
                 rules={{
                   required: false,
-                  max: { value: 160, message: 'Max length is 160 characters' },
+                  max: {
+                    value: 160,
+                    message: t('formValidation.maxLength', { count: 160 }),
+                  },
                 }}
                 name='progressDescription'
                 render={({ field }) => (
@@ -74,9 +80,9 @@ export function EditProgressModal({
                     multiline
                     returnKeyLabel='done'
                     returnKeyType='done'
-                    label={'Description'}
+                    label={t('description')}
                     onBlur={field.onBlur}
-                    placeholder='Description (optional)'
+                    placeholder={t('descriptionOptional')}
                     outlineStyle={{
                       borderWidth: 2,
                       borderColor: Colors.brand.charcoal,
@@ -101,7 +107,7 @@ export function EditProgressModal({
                 <InputError
                   message={
                     form.formState.errors.progressDescription.message?.toString() ??
-                    'Error'
+                    t('error')
                   }
                 />
               )}
@@ -123,7 +129,7 @@ export function EditProgressModal({
               mode='outlined'
               onPress={form.handleSubmit(handleEditProgress)}
             >
-              Update
+              {t('update')}
             </Button>
             <Button
               textColor={Colors.brand.charcoal}
@@ -142,7 +148,7 @@ export function EditProgressModal({
                 handleClose();
               }}
             >
-              Close
+              {t('close')}
             </Button>
           </View>
         </View>

@@ -1,13 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { usePathname } from 'expo-router';
-import { Goal } from '@/watermelon/models';
 import { useDatabase } from '@/contexts/WaterMelonContext';
 import { ActivityIndicator } from 'react-native-paper';
 import useObserveGoals from '@/hooks/useObserveGoals';
+import { useTranslation } from 'react-i18next';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
@@ -31,6 +31,8 @@ export default function TabLayout() {
   }, [goals]);
 
   const pathname = usePathname();
+
+  const { t } = useTranslation();
 
   return (
     <View style={!goals ? styles.noGoals : styles.container}>
@@ -72,7 +74,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name='index'
             options={{
-              title: 'Goals',
+              title: t('goal_other'),
               tabBarIcon: ({ color, focused }) => (
                 <TabBarIcon name='check' color={color} />
               ),
@@ -81,7 +83,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name='account'
             options={{
-              title: 'Settings',
+              title: t('setting_other'),
               tabBarIcon: ({ color }) => (
                 <TabBarIcon name='user' color={color} />
               ),

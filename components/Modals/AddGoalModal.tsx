@@ -3,6 +3,7 @@ import { Portal, Modal, Text, Button, TextInput } from 'react-native-paper';
 import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
+import { useTranslation } from 'react-i18next';
 
 export function AddGoalModal({
   visible,
@@ -13,6 +14,8 @@ export function AddGoalModal({
   handleAddGoal: (data: Record<string, any>) => void;
   handleClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   const form = useForm({
     defaultValues: {
       goalTitle: '',
@@ -45,15 +48,21 @@ export function AddGoalModal({
             variant='titleLarge'
             style={{ color: Colors.brand.charcoal, fontWeight: '600' }}
           >
-            Create Goal
+            {t('createGoal')}
           </Text>
           <View style={{ gap: 4, marginVertical: 16 }}>
             <View>
               <Controller
                 control={form.control}
                 rules={{
-                  required: { value: true, message: 'Title is required' },
-                  max: { value: 60, message: 'Max length is 60 characters' },
+                  required: {
+                    value: true,
+                    message: t('formValidation.titleRequired'),
+                  },
+                  max: {
+                    value: 60,
+                    message: t('formValidation.maxLength', { count: 60 }),
+                  },
                 }}
                 name='goalTitle'
                 render={({ field }) => (
@@ -68,7 +77,7 @@ export function AddGoalModal({
                     error={Boolean(form.formState.errors.goalTitle?.message)}
                     activeOutlineColor={Colors.brand.charcoal}
                     mode='outlined'
-                    label='Title'
+                    label={t('title')}
                     value={field.value}
                     onChangeText={field.onChange}
                   />
@@ -76,7 +85,9 @@ export function AddGoalModal({
               />
               {form.formState.errors.goalTitle && (
                 <InputError
-                  message={form.formState.errors.goalTitle.message ?? 'Error'}
+                  message={
+                    form.formState.errors.goalTitle.message ?? t('error')
+                  }
                 />
               )}
             </View>
@@ -91,7 +102,7 @@ export function AddGoalModal({
                     multiline
                     returnKeyLabel='done'
                     returnKeyType='done'
-                    label={'Description'}
+                    label={t('description')}
                     onBlur={field.onBlur}
                     outlineStyle={{
                       borderWidth: 2,
@@ -138,7 +149,7 @@ export function AddGoalModal({
               mode='outlined'
               onPress={form.handleSubmit(onSubmit)}
             >
-              Create
+              {t('create')}
             </Button>
             <Button
               textColor={Colors.brand.charcoal}
@@ -155,7 +166,7 @@ export function AddGoalModal({
               mode='outlined'
               onPress={handleClose}
             >
-              Close
+              {t('close')}
             </Button>
           </View>
         </View>

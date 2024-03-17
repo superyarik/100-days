@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { Portal, Modal, Text, Button } from 'react-native-paper';
 import Colors from '@/constants/Colors';
+import { useTranslation } from 'react-i18next';
 
 export function DeleteGoalModal({
   visible,
@@ -11,6 +12,8 @@ export function DeleteGoalModal({
   handleDeleteGoal: (data: any) => void;
   handleClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <Portal>
       <Modal
@@ -24,10 +27,8 @@ export function DeleteGoalModal({
         }}
       >
         <View style={{ gap: 24 }}>
-          <Text variant='headlineMedium'>You sure?</Text>
-          <Text variant='bodyLarge'>
-            Are you sure you want to delete this goal?
-          </Text>
+          <Text variant='headlineMedium'>{t('youSureQuestion')}</Text>
+          <Text variant='bodyLarge'>{t('youSureDeleteGoal')}</Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Button
               style={{
@@ -43,7 +44,7 @@ export function DeleteGoalModal({
               mode='outlined'
               onPress={handleDeleteGoal}
             >
-              Yes
+              {t('yes')}
             </Button>
             <Button
               textColor={Colors.brand.charcoal}
@@ -59,7 +60,7 @@ export function DeleteGoalModal({
               mode='outlined'
               onPress={handleClose}
             >
-              No
+              {t('no')}
             </Button>
           </View>
         </View>

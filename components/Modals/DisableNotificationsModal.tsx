@@ -1,6 +1,7 @@
 import { View } from 'react-native';
 import { Portal, Modal, Text, Button } from 'react-native-paper';
 import Colors from '@/constants/Colors';
+import { useTranslation } from 'react-i18next';
 
 export function DisableNotificationsModal({
   visible,
@@ -11,6 +12,8 @@ export function DisableNotificationsModal({
   handleDisableNotifications: (data: any) => void;
   handleClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <Portal>
       <Modal
@@ -28,10 +31,10 @@ export function DisableNotificationsModal({
             variant='headlineMedium'
             style={{ color: Colors.brand.charcoal }}
           >
-            You sure?
+            {t('youSureQuestion')}
           </Text>
           <Text variant='bodyLarge' style={{ color: Colors.brand.charcoal }}>
-            Are you sure you want to turn off all notifications?
+            {t('youSureWarningNotifications')}
           </Text>
           <View style={{ flexDirection: 'row', gap: 8 }}>
             <Button
@@ -48,7 +51,7 @@ export function DisableNotificationsModal({
               mode='outlined'
               onPress={handleDisableNotifications}
             >
-              Yes
+              {t('yes')}
             </Button>
             <Button
               textColor={Colors.brand.charcoal}
@@ -64,7 +67,7 @@ export function DisableNotificationsModal({
               mode='outlined'
               onPress={handleClose}
             >
-              No
+              {t('no')}
             </Button>
           </View>
         </View>

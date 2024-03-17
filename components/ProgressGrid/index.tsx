@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
+import { useTranslation } from 'react-i18next';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -25,6 +26,7 @@ export function ProgressGrid({
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
 }) {
+  const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleCellPress = async (
@@ -41,11 +43,11 @@ export function ProgressGrid({
       if (progressToUpdate) {
         setEditingProgress(progressToUpdate);
       } else {
-        setErrorMessage('There was an error editing this item.');
+        setErrorMessage(t('errorEditingItem'));
       }
     }
     if (goalProgress.some((p: Progress) => p.cellNumber === cellNumber)) {
-      setErrorMessage("You've already checked this square.");
+      setErrorMessage(t('alreadyChecked'));
     }
   };
 
@@ -106,7 +108,7 @@ export function ProgressGrid({
             );
           })}
           <View style={{ marginTop: 20, width: '100%' }}>
-            <Text variant='headlineSmall'>Description:</Text>
+            <Text variant='headlineSmall'>{t('description')}:</Text>
             <Text variant='bodyMedium'>{description}</Text>
           </View>
         </>

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hundred Habits",
     "slug": "hundred-habits",
-    "version": "1.0.0",
+    "version": "1.1.5",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -27,6 +27,7 @@
     "plugins": [
       "expo-router",
       "expo-build-properties",
+      ["expo-localization"],
       ["@morrowdigital/watermelondb-expo-plugin"],
       [
         "expo-build-properties",
@@ -38,7 +39,8 @@
             }
           }
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
@@ -53,9 +55,10 @@
     },
     "owner": "rawestmoreland",
     "runtimeVersion": {
-      "policy": "appVersion"
+      "policy": "sdkVersion"
     },
     "updates": {
+      "enabled": true,
       "url": "https://u.expo.dev/9e56f299-b0ca-494b-9b3b-7040a9521ed6"
     }
   }
