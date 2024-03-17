@@ -11,8 +11,15 @@ import { Goal, Progress } from '@/watermelon/models';
 import { EditProgressModal } from '@/components/Modals/EditProgressModal';
 import { DeleteGoalModal } from '@/components/Modals/DeleteGoalModal';
 import EnhancedEditGoalModal from '@/components/Modals/EditGoalModal';
+import {
+  cancelScheduledNotificationAsync,
+  requestPermissionsAsync,
+  scheduleNotificationAndGetID,
+} from '@/services/notificationsService';
+import { useTranslation } from 'react-i18next';
 
 export default function Page() {
+  const { t } = useTranslation();
   const database = useDatabase();
   const { id, description } = useLocalSearchParams();
 
@@ -46,6 +53,7 @@ export default function Page() {
     data: Record<string, any>;
     goal: Goal;
   }) => {
+    const oldTitle = goal.title;
     await database.write(async () => {
       await goal.update((goal) => {
         goal.title = data.goalTitle;
@@ -53,6 +61,26 @@ export default function Page() {
       });
     });
     setIsEditGoalModalVisible(false);
+
+    // If the user has granted permissions to send notifications and the goal title has changed
+    if (Boolean(goal.notificationId) && data.goalTitle !== oldTitle) {
+      // Check if the user has granted permissions to send notifications
+      const canNotify: boolean = await requestPermissionsAsync();
+      if (!canNotify) return;
+      // Cancel the old alert
+      await cancelScheduledNotificationAsync(goal.notificationId);
+      // Schedule a new alert with the new goal title and the same hour
+      const notificationId = await scheduleNotificationAndGetID({
+        goalName: data.goalTitle,
+        hour: goal.notificationHour,
+      });
+      // Update the goal with the new notification ID
+      await database.write(async () => {
+        await goal.update((g: Goal) => {
+          g.notificationId = notificationId;
+        });
+      });
+    }
   };
 
   const handleAddProgress = async ({
@@ -135,26 +163,26 @@ export default function Page() {
               actions={[
                 {
                   icon: 'pencil',
-                  label: 'Edit goal',
+                  label: t('editGoal'),
                   style: { backgroundColor: Colors.brand.primary },
                   onPress: () => setIsEditGoalModalVisible(true),
                 },
                 {
                   icon: 'trash-can',
-                  label: 'Delete goal',
+                  label: t('deleteGoal'),
                   style: { backgroundColor: Colors.brand.primary },
                   onPress: () => setIsDeleteGoalModalVisible(true),
                 },
                 {
                   icon: 'arrow-left',
-                  label: 'Back',
+                  label: t('back'),
                   style: { backgroundColor: Colors.brand.primary },
                   onPress: () => router.back(),
                 },
               ]}
               color={Colors.brand.charcoal}
               icon='dots-horizontal'
-              aria-label='Add a goal'
+              aria-label={t('addAGoal')}
               rippleColor={Colors.brand.secondary}
             />
           </Portal>

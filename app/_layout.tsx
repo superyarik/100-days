@@ -15,6 +15,11 @@ import {
   getScheduledNotificationsAsync,
   requestPermissionsAsync,
 } from '@/services/notificationsService';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import * as Localization from 'expo-localization';
+import en from '@/services/i18n/en-US.json';
+import pt from '@/services/i18n/pt.json';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -40,6 +45,13 @@ Notifications.setNotificationHandler({
 export default function RootLayout() {
   const notificationListener = useRef<Notifications.Subscription>();
   const [notification, setNotification] = useState<any>();
+  const [language, setLanguage] = useState<string | null>();
+  const [languageLoaded, setLanguageLoaded] = useState(false);
+
+  const resources = {
+    en,
+    pt,
+  };
 
   const [pushAllowed, setPushAllowed] = useState(false);
 
@@ -60,6 +72,27 @@ export default function RootLayout() {
   }, [loaded]);
 
   useEffect(() => {
+    if (languageLoaded && loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [languageLoaded, loaded]);
+
+  useEffect(() => {
+    if (!language) return;
+    i18n.use(initReactI18next).init({
+      compatibilityJSON: 'v3',
+      resources,
+      lng: language ?? 'en-US',
+      fallbackLng: 'en-US',
+    });
+    setLanguageLoaded(true);
+  }, [language]);
+
+  useEffect(() => {
+    const phoneLanguage =
+      Localization.getLocales()?.[0]?.languageTag ?? 'en-US';
+    setLanguage(phoneLanguage);
+
     const requestNotificationsPerms = async () => {
       await requestPermissionsAsync().then((result) => {
         setPushAllowed(result);
@@ -96,7 +129,7 @@ export default function RootLayout() {
     setupNotifications();
   }, [pushAllowed]);
 
-  if (!loaded) {
+  if (!loaded || !languageLoaded) {
     return null;
   }
 

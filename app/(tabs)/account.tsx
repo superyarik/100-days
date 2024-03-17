@@ -5,10 +5,12 @@ import { useDatabase } from '@/contexts/WaterMelonContext';
 import { cancelAllScheduledNotificationsAsync } from '@/services/notificationsService';
 import { Goal } from '@/watermelon/models';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Snackbar, Text } from 'react-native-paper';
 
 export default function TabTwoScreen() {
+  const { t } = useTranslation();
   const database = useDatabase();
   const [isDeleteAllModalVisible, setIsDeleteAllModalVisible] = useState(false);
   const [
@@ -27,7 +29,7 @@ export default function TabTwoScreen() {
       await database.get('progresses').query().destroyAllPermanently();
     });
     setIsDeleteAllModalVisible(false);
-    setSnackbarText('All goals and progress have been deleted');
+    setSnackbarText(t('allGoalsDeleted'));
   };
 
   const handleDisableNotifications = async () => {
@@ -47,7 +49,7 @@ export default function TabTwoScreen() {
       await database.batch(...updates);
     });
 
-    setSnackbarText('All notifications have been disabled');
+    setSnackbarText(t('allNotificationsDisabled'));
     setIsDisableNotificationsModalVisible(false);
   };
 
@@ -69,7 +71,7 @@ export default function TabTwoScreen() {
         onPress={() => setIsDeleteAllModalVisible(true)}
         icon='delete'
       >
-        Delete all data
+        {t('deleteAllData')}
       </Button>
       <Button
         mode='outlined'
@@ -87,7 +89,7 @@ export default function TabTwoScreen() {
         onPress={() => setIsDisableNotificationsModalVisible(true)}
         icon='bell'
       >
-        Disable all notifications
+        {t('disableAllNotifications')}
       </Button>
       <DeleteAllModal
         visible={isDeleteAllModalVisible}

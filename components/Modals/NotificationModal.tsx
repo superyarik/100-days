@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors';
+import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 import { Portal, Dialog, Text, Button } from 'react-native-paper';
 
@@ -9,6 +10,8 @@ export function NotificationModal({
   visible: boolean;
   handleClose: () => void;
 }) {
+  const { t } = useTranslation();
+
   return (
     <Portal>
       <Dialog
@@ -16,12 +19,9 @@ export function NotificationModal({
         visible={visible}
         onDismiss={handleClose}
       >
-        <Dialog.Title>Check Notifications</Dialog.Title>
+        <Dialog.Title>{t('checkNotifications')}</Dialog.Title>
         <Dialog.Content>
-          <Text variant='bodyMedium'>
-            Your notifications settings are disabled for this app. Check your
-            settings to enable notifications.
-          </Text>
+          <Text variant='bodyMedium'>{t('notificationsDisabledWarning')}</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <Button
@@ -42,7 +42,7 @@ export function NotificationModal({
               handleClose();
             }}
           >
-            Settings
+            {t('setting_other')}
           </Button>
           <Button
             mode='outlined'
@@ -59,7 +59,7 @@ export function NotificationModal({
             textColor={Colors.brand.charcoal}
             onPress={handleClose}
           >
-            Close
+            {t('close')}
           </Button>
         </Dialog.Actions>
       </Dialog>
