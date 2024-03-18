@@ -62,23 +62,23 @@ export default function RootLayout() {
   });
 
   // AppState subscription
-  useEffect(() => {
-    if (Platform.OS !== 'android') return;
+  // useEffect(() => {
+  //   if (Platform.OS !== 'android') return;
 
-    // Any time the app state changes, get the new locale and set it.
-    const _handleAppStateChange = () => {
-      setLanguage(Localization.getLocales()?.[0]?.languageTag ?? 'en-US');
-    };
+  //   // Any time the app state changes, get the new locale and set it.
+  //   const _handleAppStateChange = () => {
+  //     setLanguage(Localization.getLocales()?.[0]?.languageTag ?? 'en-US');
+  //   };
 
-    const subscription = AppState.addEventListener(
-      'change',
-      _handleAppStateChange
-    );
+  //   const subscription = AppState.addEventListener(
+  //     'change',
+  //     _handleAppStateChange
+  //   );
 
-    return () => {
-      subscription.remove();
-    };
-  }, []);
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
