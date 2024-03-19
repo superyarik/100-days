@@ -18,17 +18,17 @@ export function EditProgressModal({
   handleClose: () => void;
   progress?: Progress | null;
 }) {
-  if (!progress) return null;
-
   const { t } = useTranslation();
 
   const form = useForm({
     defaultValues: {
-      progressDescription: progress.description,
+      progressDescription: progress?.description,
     },
   });
 
   const completedDate = useMemo(() => {
+    if (!progress) return '';
+
     const options = {
       year: 'numeric',
       month: 'numeric',
