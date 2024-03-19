@@ -18,9 +18,9 @@ export function EditProgressModal({
   handleClose: () => void;
   progress?: Progress | null;
 }) {
-  const { t } = useTranslation();
-
   if (!progress) return null;
+
+  const { t } = useTranslation();
 
   const form = useForm({
     defaultValues: {
@@ -61,7 +61,14 @@ export function EditProgressModal({
           >
             {t('updateYourProgress')}
           </Text>
-          <Text>{t('completedDate', { date: completedDate })}</Text>
+          <Text>
+            {t('completedDate', {
+              date: completedDate,
+              interpolation: {
+                escapeValue: false,
+              },
+            })}
+          </Text>
           <View style={{ gap: 4, marginVertical: 16 }}>
             <View>
               <Controller

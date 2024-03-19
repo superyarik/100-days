@@ -41,9 +41,9 @@ function EditGoalModal({
   handleEditGoal: (data: any) => void;
   handleClose: () => void;
 }) {
+  const database = useDatabase();
   const { t } = useTranslation();
 
-  const database = useDatabase();
   const form = useForm({
     defaultValues: {
       goalTitle: goal.title,
@@ -53,18 +53,18 @@ function EditGoalModal({
 
   const [reminders, setReminders] = useState(Boolean(goal.notificationId));
 
-  useFocusEffect(
-    useCallback(() => {
-      setReminders(Boolean(goal.notificationId));
-    }, [goal.notificationId])
-  );
-
   const [selectedTime, setSelectedTime] = useState(
     (goal.notificationHour ?? 9).toString()
   );
 
   const [isNotificationModalVisible, setIsNotificationModalVisible] =
     useState(false);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setReminders(Boolean(goal.notificationId));
+  //   }, [goal.notificationId])
+  // );
 
   const handleReminderChange = async (value: boolean) => {
     if (value === false) {
