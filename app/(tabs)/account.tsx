@@ -1,7 +1,7 @@
 import { DeleteAllModal } from '@/components/Modals/DeleteAllModal';
 import { DisableNotificationsModal } from '@/components/Modals/DisableNotificationsModal';
 import Colors from '@/constants/Colors';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import { cancelAllScheduledNotificationsAsync } from '@/services/notificationsService';
 import { Goal } from '@/watermelon/models';
 import { useState } from 'react';
@@ -90,6 +90,24 @@ export default function TabTwoScreen() {
         icon='bell'
       >
         {t('disableAllNotifications')}
+      </Button>
+      <Button
+        mode='outlined'
+        buttonColor={Colors.brand.tertiary}
+        textColor={Colors.brand.cream}
+        style={{
+          borderWidth: 2,
+          borderColor: Colors.brand.charcoal,
+          borderRadius: 4,
+          shadowColor: Colors.brand.charcoal,
+          shadowOpacity: 1,
+          shadowOffset: { width: 3, height: 3 },
+          shadowRadius: 0,
+        }}
+        onPress={() => setIsDisableNotificationsModalVisible(true)}
+        icon='bell'
+      >
+        {t('language_one')}
       </Button>
       <DeleteAllModal
         visible={isDeleteAllModalVisible}

@@ -4,10 +4,10 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { usePathname } from 'expo-router';
-import { useDatabase } from '@/contexts/WaterMelonContext';
 import { ActivityIndicator } from 'react-native-paper';
 import useObserveGoals from '@/hooks/useObserveGoals';
 import { useTranslation } from 'react-i18next';
+import { useDatabase } from '@nozbe/watermelondb/react';
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {

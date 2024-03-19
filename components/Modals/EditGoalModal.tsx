@@ -13,7 +13,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
 import { Goal } from '@/watermelon/models';
 import { useCallback, useMemo, useState } from 'react';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import {
   cancelScheduledNotificationAsync,
   scheduleNotificationAndGetID,

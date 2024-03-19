@@ -1,7 +1,7 @@
 import { StatusBar, StyleSheet } from 'react-native';
 
 import { FAB } from 'react-native-paper';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import EnhancedGoalsList from '@/components/GoalsList';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMemo, useState } from 'react';
@@ -10,7 +10,6 @@ import Colors from '@/constants/Colors';
 import { scheduleNotificationAndGetID } from '@/services/notificationsService';
 import useObserveGoals from '@/hooks/useObserveGoals';
 import { useTranslation } from 'react-i18next';
-import { useI18n } from '@/contexts/I18nContext';
 
 export default function HomeScreen() {
   const { t } = useTranslation();

@@ -1,12 +1,12 @@
 import { ProgressGrid } from '@/components/ProgressGrid';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams } from 'expo-router';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { ActivityIndicator, FAB, IconButton, Portal } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AddProgressModal } from '@/components/Modals/AddProgressModal';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import { Goal, Progress } from '@/watermelon/models';
 import { EditProgressModal } from '@/components/Modals/EditProgressModal';
 import { DeleteGoalModal } from '@/components/Modals/DeleteGoalModal';
@@ -39,6 +39,8 @@ export default function Page() {
 
   const handleDeleteGoal = async (goal: Goal) => {
     await database.write(async () => {
+      const goalNotification = goal.notificationId;
+      await cancelScheduledNotificationAsync(goalNotification);
       await goal.destroyPermanently();
       await goal.progresses.destroyAllPermanently();
     });

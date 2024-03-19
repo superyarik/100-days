@@ -15,7 +15,7 @@ const adapter = new SQLiteAdapter({
   },
 });
 
-const database = new Database({
+export const database = new Database({
   adapter,
   modelClasses: [Goal, Progress],
 });
