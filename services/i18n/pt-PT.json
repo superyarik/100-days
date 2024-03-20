@@ -10,6 +10,16 @@
     "goal_other": "Objetivos",
     "title": "Título",
     "back": "Voltar",
+    "language_name": {
+      "en-US": "Inglês",
+      "es-ES": "Espanhol",
+      "fr-FR": "Francês",
+      "de-DE": "Alemão",
+      "ru-RU": "Russo",
+      "zh-CN": "Chinês Simplificado",
+      "hi-IN": "Hindi",
+      "pt-PT": "Português"
+    },
     "language_one": "Idioma",
     "language_other": "Idiomas",
     "reminder_one": "Lembrete",

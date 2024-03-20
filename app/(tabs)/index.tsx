@@ -10,6 +10,7 @@ import Colors from '@/constants/Colors';
 import { scheduleNotificationAndGetID } from '@/services/notificationsService';
 import useObserveGoals from '@/hooks/useObserveGoals';
 import { useTranslation } from 'react-i18next';
+import { Goal } from '@/watermelon/models';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ export default function HomeScreen() {
       const notificationId = await scheduleNotificationAndGetID({
         goalName: title,
       });
-      await database.get('goals').create((goal: any) => {
+      await database.get('goals').create((goal: Goal) => {
         goal.title = title;
         goal.description = description;
         goal.status = 'active';

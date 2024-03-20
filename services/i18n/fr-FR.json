@@ -10,6 +10,16 @@
     "goal_other": "Objectifs",
     "title": "Titre",
     "back": "Retour",
+    "language_name": {
+      "en-US": "Anglais",
+      "es-ES": "Espagnol",
+      "fr-FR": "Français",
+      "de-DE": "Allemand",
+      "ru-RU": "Russe",
+      "zh-CN": "Chinois",
+      "hi-IN": "Hindi",
+      "pt-PT": "Portugais"
+    },
     "language_one": "Langue",
     "language_other": "Langues",
     "reminder_one": "Rappel",

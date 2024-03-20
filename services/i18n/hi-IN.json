@@ -10,6 +10,16 @@
     "goal_other": "लक्ष्य",
     "title": "शीर्षक",
     "back": "वापस",
+    "language_name": {
+      "en-US": "अंग्रेज़ी",
+      "es-ES": "स्पेनिश",
+      "fr-FR": "फ्रेंच",
+      "de-DE": "जर्मन",
+      "ru-RU": "रूसी",
+      "zh-CN": "चीनी",
+      "hi-IN": "हिंदी",
+      "pt-PT": "पुर्तगाली"
+    },
     "language_one": "भाषा",
     "language_other": "भाषाएँ",
     "reminder_one": "अनुस्मारक",
