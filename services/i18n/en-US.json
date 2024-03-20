@@ -10,6 +10,16 @@
     "goal_other": "Goals",
     "title": "Title",
     "back": "Back",
+    "language_name": {
+      "en-US": "English",
+      "es-ES": "Spanish",
+      "fr-FR": "French",
+      "de-DE": "German",
+      "ru-RU": "Russian",
+      "zh-CN": "Chinese (CN)",
+      "hi-IN": "Hindi",
+      "pt-PT": "Portuguese"
+    },
     "language_one": "Language",
     "language_other": "Languages",
     "reminder_one": "Reminder",

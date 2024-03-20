@@ -10,6 +10,16 @@
     "goal_other": "Objetivos",
     "title": "Título",
     "back": "Volver",
+    "language_name": {
+      "en-US": "Inglés",
+      "es-ES": "Español",
+      "fr-FR": "Francés",
+      "de-DE": "Alemán",
+      "ru-RU": "Ruso",
+      "zh-CN": "Chino",
+      "hi-IN": "Hindi",
+      "pt-PT": "Portugués"
+    },
     "language_one": "Idioma",
     "language_other": "Idiomas",
     "reminder_one": "Recordatorio",

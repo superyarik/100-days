@@ -1,10 +1,20 @@
 import {
   addColumns,
+  createTable,
   schemaMigrations,
 } from '@nozbe/watermelondb/Schema/migrations';
 
 export default schemaMigrations({
   migrations: [
+    {
+      toVersion: 9,
+      steps: [
+        createTable({
+          name: 'user_profiles',
+          columns: [{ name: 'locale', type: 'string', isOptional: true }],
+        }),
+      ],
+    },
     {
       toVersion: 8,
       steps: [

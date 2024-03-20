@@ -8,6 +8,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Snackbar, Text } from 'react-native-paper';
+import { useI18n } from '@/contexts/I18nContext';
+import { router } from 'expo-router';
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
@@ -104,7 +106,7 @@ export default function TabTwoScreen() {
           shadowOffset: { width: 3, height: 3 },
           shadowRadius: 0,
         }}
-        onPress={() => setIsDisableNotificationsModalVisible(true)}
+        onPress={() => router.push('/language')}
         icon='bell'
       >
         {t('language_one')}
