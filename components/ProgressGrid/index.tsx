@@ -24,7 +24,7 @@ export function ProgressGrid({
   goalProgress: Progress[];
   description: string | string[];
   setSelectedCell: (value: number) => void;
-  setEditingProgress: (value: Progress) => void;
+  setEditingProgress: (value: Progress & { canDelete: boolean }) => void;
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -37,11 +37,16 @@ export function ProgressGrid({
     if (!cellCompleted) {
       setSelectedCell(cellNumber);
     } else {
-      const progressToUpdate = goalProgress.find(
+      const progressToUpdate: Progress | undefined = goalProgress.find(
         (p: Progress) => p.cellNumber === cellNumber && p.goal.id === goal?.id
       );
       if (progressToUpdate) {
-        setEditingProgress(progressToUpdate);
+        const isLastCompletedCell =
+          goalProgress.indexOf(progressToUpdate) === goalProgress.length - 1;
+        setEditingProgress({
+          ...progressToUpdate,
+          canDelete: isLastCompletedCell,
+        });
       } else {
         setErrorMessage(t('errorEditingItem'));
       }
