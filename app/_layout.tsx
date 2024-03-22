@@ -102,11 +102,10 @@ export default function RootLayout() {
     // Any time the app state changes, get the new locale and set it.
     const _handleAppStateChange = async () => {
       const storedLocale = await AsyncStorage.getItem('hundred_locale');
-      if (storedLocale) i18n.changeLanguage(storedLocale);
-      setLanguage(
-        (storedLocale
+      i18n.changeLanguage(
+        storedLocale
           ? storedLocale
-          : Localization.getLocales()?.[0]?.languageTag) ?? 'en-US'
+          : Localization.getLocales()?.[0]?.languageTag ?? 'en-US'
       );
     };
 
@@ -125,6 +124,7 @@ export default function RootLayout() {
 
     const fetchGoals = async () => {
       const goals = await database.collections.get('goals').query().fetch();
+      // @ts-ignore
       setGoals(goals);
     };
 
@@ -149,7 +149,7 @@ export default function RootLayout() {
   }, [languageLoaded, loaded]);
 
   useEffect(() => {
-    if (!language) return;
+    if (!language || languageLoaded) return;
     i18n.use(initReactI18next).init({
       compatibilityJSON: 'v3',
       resources,
@@ -157,7 +157,7 @@ export default function RootLayout() {
       fallbackLng: 'en',
     });
     setLanguageLoaded(true);
-  }, [language]);
+  }, [language, languageLoaded]);
 
   useEffect(() => {
     const getStoredLanguageAndSet = async () => {
