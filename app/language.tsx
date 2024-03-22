@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import {
   Dimensions,
   FlatList,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -14,6 +15,7 @@ import Colors from '@/constants/Colors';
 import { useI18n } from '@/contexts/I18nContext';
 import i18next from 'i18next';
 import { languages } from '@/constants/languages';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 const paddingHorizontal = width * 0.1;
@@ -65,6 +67,7 @@ const Item = ({ item, locale }: { item: any; locale: string }) => {
 export default function Language() {
   // @ts-ignore
   const { locale } = useI18n();
+  const { top } = useSafeAreaInsets();
 
   return (
     <SafeAreaView style={[styles.safeArea]}>
@@ -77,7 +80,7 @@ export default function Language() {
         }}
         onPress={() => router.back()}
       />
-      <View style={{ marginTop: 50 }}>
+      <View style={{ marginTop: Platform.OS === 'android' ? top + 80 : top }}>
         <FlatList
           data={languages}
           renderItem={({ item }) => <Item item={item} locale={locale} />}
