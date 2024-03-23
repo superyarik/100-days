@@ -11,10 +11,11 @@ import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
 import { Progress } from '@/watermelon/models';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useI18n } from '@/contexts/I18nContext';
 
-type EnhancedProgress = Progress & { canDelete: boolean };
+type EnhancedProgress = Progress;
 
 export function EditProgressModal({
   visible,
@@ -22,14 +23,18 @@ export function EditProgressModal({
   handleDeleteProgress,
   handleClose,
   progress,
+  canDeleteActive,
 }: {
   visible: boolean;
   handleEditProgress: (data: any) => Promise<void>;
   handleDeleteProgress: () => Promise<void>;
   handleClose: () => void;
   progress?: EnhancedProgress | null;
+  canDeleteActive: boolean;
 }) {
   const { t } = useTranslation();
+
+  const { locale } = useI18n();
 
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
@@ -39,6 +44,12 @@ export function EditProgressModal({
       progressDescription: progress?.description,
     },
   });
+
+  useEffect(() => {
+    if (progress) {
+      form.reset({ progressDescription: progress.description });
+    }
+  }, [progress]);
 
   const completedDate = useMemo(() => {
     if (!progress) return '';
@@ -50,7 +61,7 @@ export function EditProgressModal({
     };
 
     // @ts-ignore
-    return new Date(progress.lastLoggedAt).toLocaleDateString('en-US', options);
+    return new Date(progress?.lastLoggedAt).toLocaleDateString(locale, options);
   }, [progress]);
 
   return (
@@ -58,7 +69,6 @@ export function EditProgressModal({
       <Modal
         visible={visible}
         onDismiss={() => {
-          form.reset({ progressDescription: '' });
           handleClose();
         }}
         contentContainerStyle={{
@@ -221,14 +231,12 @@ export function EditProgressModal({
                   }}
                   compact
                   mode='outlined'
-                  onPress={() => {
-                    handleClose();
-                  }}
+                  onPress={handleClose}
                 >
                   {t('close')}
                 </Button>
               </View>
-              {progress?.canDelete && (
+              {canDeleteActive && (
                 <IconButton
                   aria-label={t('delete')}
                   iconColor={Colors.brand.cream}
