@@ -112,13 +112,6 @@ export default function Page() {
     setEditingProgress(null);
   };
 
-  const handleDeleteProgress = async () => {
-    await database.write(async () => {
-      await editingProgress?.destroyPermanently();
-    });
-    setEditingProgress(null);
-  };
-
   const handleSubmitProgress = async (data: Record<string, any>) => {
     await handleAddProgress({ description: data.progressDescription });
     setActiveCellNumber(null);
@@ -215,7 +208,6 @@ export default function Page() {
             visible={editingProgress !== null}
             handleClose={() => setEditingProgress(null)}
             handleEditProgress={handleEditProgress}
-            handleDeleteProgress={handleDeleteProgress}
             progress={editingProgress}
             canDeleteActive={canDeleteActiveCell || false}
           />

@@ -39,7 +39,7 @@ export function ProgressGrid({
     if (!cellCompleted) {
       setSelectedCell(cellNumber);
     } else {
-      const progressToUpdate: Progress | undefined = goalProgress.find(
+      const progressToUpdate = goalProgress.find(
         (p: Progress) => p.cellNumber === cellNumber && p.goal.id === goal?.id
       );
       if (progressToUpdate) {
