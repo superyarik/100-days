@@ -4,7 +4,7 @@ import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
 import { Progress } from '@/watermelon/models';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function EditProgressModal({
@@ -37,6 +37,14 @@ export function EditProgressModal({
 
     // @ts-ignore
     return new Date(progress.lastLoggedAt).toLocaleDateString('en-US', options);
+  }, [progress]);
+
+  useEffect(() => {
+    if (!progress) return;
+
+    form.reset({
+      progressDescription: progress.description,
+    });
   }, [progress]);
 
   return (
