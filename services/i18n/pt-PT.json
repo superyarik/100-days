@@ -31,7 +31,7 @@
     "youSureWarningEverything": "Tem certeza de que deseja excluir tudo? Isso é irreversível.",
     "youSureWarningNotifications": "Tem certeza de que deseja desativar todas as notificações?",
     "notificationsDisabledWarning": "As configurações de notificações estão desativadas para este aplicativo. Verifique suas configurações para ativar as notificações.",
-    "checkNotifiations": "Verificar notificações",
+    "checkNotifications": "Verificar notificações",
     "editGoalName": "Editar o objetivo {{title}}",
     "create": "Criar",
     "close": "Fechar",

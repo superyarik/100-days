@@ -31,7 +31,7 @@
     "youSureWarningEverything": "Sind Sie sicher, dass Sie alles löschen möchten? Dies ist unwiderruflich.",
     "youSureWarningNotifications": "Sind Sie sicher, dass Sie alle Benachrichtigungen ausschalten möchten?",
     "notificationsDisabledWarning": "Ihre Benachrichtigungseinstellungen für diese App sind deaktiviert. Überprüfen Sie Ihre Einstellungen, um Benachrichtigungen zu aktivieren.",
-    "checkNotifiations": "Benachrichtigungen überprüfen",
+    "checkNotifications": "Benachrichtigungen überprüfen",
     "editGoalName": "Ziel {{title}} bearbeiten",
     "create": "Erstellen",
     "close": "Schließen",

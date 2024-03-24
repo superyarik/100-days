@@ -31,7 +31,7 @@
     "youSureWarningEverything": "你确定要删除所有内容吗？这是不可逆的。",
     "youSureWarningNotifications": "你确定要关闭所有通知吗？",
     "notificationsDisabledWarning": "此应用的通知设置已禁用。检查设置以启用通知。",
-    "checkNotifiations": "检查通知",
+    "checkNotifications": "检查通知",
     "editGoalName": "编辑目标{{title}}",
     "create": "创建",
     "close": "关闭",

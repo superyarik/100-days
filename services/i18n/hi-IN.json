@@ -31,7 +31,7 @@
     "youSureWarningEverything": "क्या आप सच में सब कुछ हटाना चाहते हैं? यह अपरिवर्तनीय है।",
     "youSureWarningNotifications": "क्या आप वाकई सभी सूचनाएं बंद करना चाहते हैं?",
     "notificationsDisabledWarning": "इस ऐप के लिए आपकी सूचना सेटिंग्स अक्षम हैं। सूचनाओं को सक्षम करने के लिए अपनी सेटिंग्स जांचें।",
-    "checkNotifiations": "सूचनाएं जाँचें",
+    "checkNotifications": "सूचनाएं जाँचें",
     "editGoalName": "लक्ष्य {{title}} संपादित करें",
     "create": "सृजन करें",
     "close": "बंद करें",

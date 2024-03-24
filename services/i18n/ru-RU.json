@@ -31,7 +31,7 @@
     "youSureWarningEverything": "Вы уверены, что хотите удалить все? Это необратимо.",
     "youSureWarningNotifications": "Вы уверены, что хотите отключить все уведомления?",
     "notificationsDisabledWarning": "Уведомления для этого приложения отключены. Проверьте свои настройки, чтобы включить уведомления.",
-    "checkNotifiations": "Проверить уведомления",
+    "checkNotifications": "Проверить уведомления",
     "editGoalName": "Редактировать цель {{title}}",
     "create": "Создать",
     "close": "Закрыть",
