@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Sí",
     "no": "No",
+    "delete": "Eliminar",
     "addAGoal": "Agregar un objetivo",
     "createGoal": "Crear objetivo",
     "editGoal": "Editar objetivo",
@@ -26,6 +27,7 @@
     "reminder_other": "Recordatorios",
     "description": "Descripción",
     "youSureQuestion": "¿Estás seguro?",
+    "youSureDeleteProgress": "¿Estás seguro de que quieres eliminar este progreso?",
     "youSureDeleteGoal": "¿Estás seguro de que quieres eliminar este objetivo?",
     "youSureWarningEverything": "¿Estás seguro de que quieres eliminar todo? Esto es irreversible.",
     "youSureWarningNotifications": "¿Estás seguro de que quieres desactivar todas las notificaciones?",

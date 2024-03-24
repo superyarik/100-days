@@ -2,6 +2,7 @@
   "translation": {
     "yes": "是",
     "no": "否",
+    "delete": "删除",
     "addAGoal": "添加目标",
     "createGoal": "创建目标",
     "editGoal": "编辑目标",

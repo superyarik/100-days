@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Yes",
     "no": "No",
+    "delete": "Delete",
     "addAGoal": "Add a goal",
     "createGoal": "Create goal",
     "editGoal": "Edit goal",
@@ -27,6 +28,7 @@
     "description": "Description",
     "youSureQuestion": "You sure?",
     "youSureDeleteGoal": "Are you sure you want to delete this goal?",
+    "youSureDeleteProgress": "Are you sure you want to delete this progress item?",
     "youSureWarningEverything": "Are you sure you want to delete everything? This is irreversible.",
     "youSureWarningNotifications": "Are you sure you want to turn off all notifications?",
     "notificationsDisabledWarning": "Your notifications settings are disabled for this app. Check your settings to enable notifications.",

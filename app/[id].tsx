@@ -30,6 +30,8 @@ export default function Page() {
 
   // We store the tapped cell number in this state
   const [activeCellNumber, setActiveCellNumber] = useState<number | null>(null);
+  const [canDeleteEditingProgress, setCanDeleteEditingProgress] =
+    useState(false);
 
   const [editingProgress, setEditingProgress] = useState<Progress | null>(null);
 
@@ -114,6 +116,16 @@ export default function Page() {
     setActiveCellNumber(null);
   };
 
+  const handleDeleteProgress = async () => {
+    if (editingProgress && canDeleteEditingProgress) {
+      await database.write(async () => {
+        await editingProgress.destroyPermanently();
+      });
+    }
+    setEditingProgress(null);
+    setCanDeleteEditingProgress(false);
+  };
+
   useEffect(() => {
     // Find the goal by ID and observe changes
     const goalSubscription = database.collections
@@ -194,6 +206,7 @@ export default function Page() {
             description={goal.description}
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
+            setCanDeleteEditingProgress={setCanDeleteEditingProgress}
           />
           <AddProgressModal
             visible={activeCellNumber !== null}
@@ -205,6 +218,8 @@ export default function Page() {
             handleClose={() => setEditingProgress(null)}
             handleEditProgress={handleEditProgress}
             progress={editingProgress}
+            canDeleteActive={canDeleteEditingProgress}
+            handleDeleteProgress={handleDeleteProgress}
           />
           <DeleteGoalModal
             visible={isDeleteGoalModalVisible}

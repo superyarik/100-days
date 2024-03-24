@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Oui",
     "no": "Non",
+    "delete": "Supprimer",
     "addAGoal": "Ajouter un objectif",
     "createGoal": "Créer un objectif",
     "editGoal": "Modifier un objectif",
@@ -27,6 +28,7 @@
     "description": "Description",
     "youSureQuestion": "Êtes-vous sûr?",
     "youSureDeleteGoal": "Êtes-vous sûr de vouloir supprimer cet objectif?",
+    "youSureDeleteProgress": "Êtes-vous sûr de vouloir supprimer ce progrès?",
     "youSureWarningEverything": "Êtes-vous sûr de vouloir tout supprimer? Cela est irréversible.",
     "youSureWarningNotifications": "Êtes-vous sûr de vouloir désactiver toutes les notifications?",
     "notificationsDisabledWarning": "Les paramètres de notifications sont désactivés pour cette application. Vérifiez vos paramètres pour activer les notifications.",
