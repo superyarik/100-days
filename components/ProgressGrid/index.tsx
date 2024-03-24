@@ -5,6 +5,7 @@ import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { ActivityIndicator, Text } from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
+import { set } from 'react-hook-form';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -19,12 +20,14 @@ export function ProgressGrid({
   description,
   setSelectedCell,
   setEditingProgress,
+  setCanDeleteEditingProgress,
 }: {
   goal: Goal | null;
   goalProgress: Progress[];
   description: string | string[];
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
+  setCanDeleteEditingProgress: (value: boolean) => void;
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,7 +44,10 @@ export function ProgressGrid({
         (p: Progress) => p.cellNumber === cellNumber && p.goal.id === goal?.id
       );
       if (progressToUpdate) {
+        const isDeletable =
+          goalProgress.indexOf(progressToUpdate) === goalProgress.length - 1;
         setEditingProgress(progressToUpdate);
+        setCanDeleteEditingProgress(isDeletable);
       } else {
         setErrorMessage(t('errorEditingItem'));
       }

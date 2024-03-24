@@ -27,6 +27,7 @@
     "description": "Описание",
     "youSureQuestion": "Вы уверены?",
     "youSureDeleteGoal": "Вы уверены, что хотите удалить эту цель?",
+    "youSureDeleteProgress": "Вы уверены, что хотите удалить этот прогресс?",
     "youSureWarningEverything": "Вы уверены, что хотите удалить все? Это необратимо.",
     "youSureWarningNotifications": "Вы уверены, что хотите отключить все уведомления?",
     "notificationsDisabledWarning": "Уведомления для этого приложения отключены. Проверьте свои настройки, чтобы включить уведомления.",

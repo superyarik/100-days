@@ -27,6 +27,7 @@
     "description": "描述",
     "youSureQuestion": "你确定吗？",
     "youSureDeleteGoal": "你确定要删除这个目标吗？",
+    "youSureDeleteProgress": "你确定要删除这个进度吗？",
     "youSureWarningEverything": "你确定要删除所有内容吗？这是不可逆的。",
     "youSureWarningNotifications": "你确定要关闭所有通知吗？",
     "notificationsDisabledWarning": "此应用的通知设置已禁用。检查设置以启用通知。",

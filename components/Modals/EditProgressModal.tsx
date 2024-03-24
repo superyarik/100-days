@@ -34,10 +34,13 @@ export function EditProgressModal({
 }) {
   const { t } = useTranslation();
 
+  // @ts-ignore
   const { locale } = useI18n();
 
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
+
+  console.log(canDeleteActive);
 
   const form = useForm({
     defaultValues: {
