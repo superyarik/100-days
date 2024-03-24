@@ -94,6 +94,29 @@ export function ProgressGrid({
             const cellCompleted = goalProgress.some(
               (p: Progress) => p.cellNumber === cellNumber
             );
+
+            let moreThanOneDay = false;
+
+            // Check to see if more than 24 hours have passed between lastLoggedDate
+            // and the previous cell's lastLoggedDate
+            if (cellCompleted) {
+              const previousCell = goalProgress.find(
+                (p: Progress) => p.cellNumber === cellNumber - 1
+              );
+
+              // Only if we have a previous cell
+              if (previousCell) {
+                const previousDate = previousCell.lastLoggedAt;
+                const currentDate = goalProgress.find(
+                  (p: Progress) => p.cellNumber === cellNumber
+                )?.lastLoggedAt;
+                // Sanity check
+                if (currentDate && previousDate) {
+                  moreThanOneDay = currentDate - previousDate > 86400000;
+                }
+              }
+            }
+
             return (
               <ProgressSquare
                 key={index}
@@ -101,13 +124,19 @@ export function ProgressGrid({
                 disabled={cellDisabled}
                 squareSize={squareSize}
                 color={
-                  cellCompleted ? Colors.brand.quaternary : Colors.brand.cream
+                  moreThanOneDay
+                    ? Colors.brand.tertiary
+                    : cellCompleted && !moreThanOneDay
+                    ? Colors.brand.quaternary
+                    : Colors.brand.cream
                 }
                 borderColor={
-                  cellCompleted
-                    ? Colors.brand.quaternary
-                    : cellDisabled
+                  cellDisabled
                     ? 'gray'
+                    : moreThanOneDay
+                    ? Colors.brand.tertiary
+                    : cellCompleted && !moreThanOneDay
+                    ? Colors.brand.quaternary
                     : Colors.brand.charcoal
                 }
               />

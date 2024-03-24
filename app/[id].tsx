@@ -92,12 +92,13 @@ export default function Page() {
   }: {
     description: string;
   }) => {
+    const todayDate = new Date();
     await database.write(async () => {
       await database.get('progresses').create((progress: Progress) => {
         progress.description = description;
         progress.goal.set(goal);
         progress.cellNumber = activeCellNumber;
-        progress.lastLoggedAt = Date.now();
+        progress.lastLoggedAt = todayDate;
       });
     });
   };
