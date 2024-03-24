@@ -74,6 +74,7 @@ function EditGoalModal({
           g.notificationId = '';
         });
       });
+      setReminders(value);
     } else {
       const res = await getPermissionsAsync();
 
