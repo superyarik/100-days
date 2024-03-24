@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Oui",
     "no": "Non",
+    "delete": "Supprimer",
     "addAGoal": "Ajouter un objectif",
     "createGoal": "Créer un objectif",
     "editGoal": "Modifier un objectif",

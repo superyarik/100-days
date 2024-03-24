@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Yes",
     "no": "No",
+    "delete": "Delete",
     "addAGoal": "Add a goal",
     "createGoal": "Create goal",
     "editGoal": "Edit goal",
