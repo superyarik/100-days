@@ -1,258 +1,165 @@
-import { ProgressGrid } from '@/components/ProgressGrid';
+import { View } from 'react-native';
+import { Portal, Modal, Text, Button, TextInput } from 'react-native-paper';
 import Colors from '@/constants/Colors';
-import { useLocalSearchParams } from 'expo-router';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { ActivityIndicator, FAB, IconButton, Portal } from 'react-native-paper';
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
-import { AddProgressModal } from '@/components/Modals/AddProgressModal';
-import { useDatabase } from '@nozbe/watermelondb/react';
-import { Goal, Progress } from '@/watermelon/models';
-import { EditProgressModal } from '@/components/Modals/EditProgressModal';
-import { DeleteGoalModal } from '@/components/Modals/DeleteGoalModal';
-import EnhancedEditGoalModal from '@/components/Modals/EditGoalModal';
-import {
-  cancelScheduledNotificationAsync,
-  requestPermissionsAsync,
-  scheduleNotificationAndGetID,
-} from '@/services/notificationsService';
+import { useForm, Controller } from 'react-hook-form';
+import { InputError } from '../Forms/InputError';
+import { Progress } from '@/watermelon/models';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function Page() {
+export function EditProgressModal({
+  visible,
+  handleEditProgress,
+  handleClose,
+  progress,
+}: {
+  visible: boolean;
+  handleEditProgress: (data: any) => Promise<void>;
+  handleClose: () => void;
+  progress?: Progress | null;
+}) {
   const { t } = useTranslation();
-  const database = useDatabase();
-  const { id, description } = useLocalSearchParams();
 
-  const [goal, setGoal] = useState<Goal | null>(null);
-  const [goalProgress, setGoalProgress] = useState<Progress[]>([]);
+  const form = useForm({
+    defaultValues: {
+      progressDescription: progress?.description,
+    },
+  });
 
-  const [isFabGroupOpen, setIsFabGroupOpen] = useState(false);
+  const completedDate = useMemo(() => {
+    if (!progress) return '';
 
-  // We store the tapped cell number in this state
-  const [activeCellNumber, setActiveCellNumber] = useState<number | null>(null);
-  const [canDeleteActiveCell, setCanDeleteActiveCell] = useState<
-    boolean | null
-  >(null);
+    const options = {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    };
 
-  const [editingProgress, setEditingProgress] = useState<Progress | null>(null);
-
-  const [isEditGoalModalVisible, setIsEditGoalModalVisible] = useState(false);
-  const [isDeleteGoalModalVisible, setIsDeleteGoalModalVisible] =
-    useState(false);
-
-  const handleDeleteGoal = async (goal: Goal) => {
-    await database.write(async () => {
-      const goalNotification = goal.notificationId;
-      await cancelScheduledNotificationAsync(goalNotification);
-      await goal.destroyPermanently();
-      await goal.progresses.destroyAllPermanently();
-    });
-    setIsDeleteGoalModalVisible(false);
-    router.navigate('/');
-  };
-
-  const handleEditGoal = async ({
-    data,
-    goal,
-  }: {
-    data: Record<string, any>;
-    goal: Goal;
-  }) => {
-    const oldTitle = goal.title;
-    await database.write(async () => {
-      await goal.update((goal) => {
-        goal.title = data.goalTitle;
-        goal.description = data.goalDescription || '';
-      });
-    });
-    setIsEditGoalModalVisible(false);
-
-    // If the user has granted permissions to send notifications and the goal title has changed
-    if (Boolean(goal.notificationId) && data.goalTitle !== oldTitle) {
-      // Check if the user has granted permissions to send notifications
-      const canNotify: boolean = await requestPermissionsAsync();
-      if (!canNotify) return;
-      // Cancel the old alert
-      await cancelScheduledNotificationAsync(goal.notificationId);
-      // Schedule a new alert with the new goal title and the same hour
-      const notificationId = await scheduleNotificationAndGetID({
-        goalName: data.goalTitle,
-        hour: goal.notificationHour,
-      });
-      // Update the goal with the new notification ID
-      await database.write(async () => {
-        await goal.update((g: Goal) => {
-          g.notificationId = notificationId;
-        });
-      });
-    }
-  };
-
-  const handleAddProgress = async ({
-    description,
-  }: {
-    description: string;
-  }) => {
-    await database.write(async () => {
-      await database.get('progresses').create((progress: Progress) => {
-        progress.description = description;
-        progress.goal.set(goal);
-        progress.cellNumber = activeCellNumber;
-        progress.lastLoggedAt = Date.now();
-      });
-    });
-  };
-
-  const handleEditProgress = async (data: Record<string, any>) => {
-    await database.write(async () => {
-      await editingProgress?.update((progress) => {
-        progress.description = data.progressDescription || '';
-      });
-    });
-    setEditingProgress(null);
-  };
-
-  const handleDeleteProgress = async () => {
-    await database.write(async () => {
-      await editingProgress?.destroyPermanently();
-    });
-    setEditingProgress(null);
-  };
-
-  const handleSubmitProgress = async (data: Record<string, any>) => {
-    await handleAddProgress({ description: data.progressDescription });
-    setActiveCellNumber(null);
-  };
-
-  useEffect(() => {
-    // Find the goal by ID and observe changes
-    const goalSubscription = database.collections
-      .get('goals')
-      .findAndObserve(id)
-      .subscribe(setGoal);
-
-    return () => goalSubscription.unsubscribe();
-  }, [database, id]);
-
-  useEffect(() => {
-    if (goal) {
-      const progressesSubscription = goal.progresses
-        .observe()
-        .subscribe(setGoalProgress);
-
-      return () => progressesSubscription.unsubscribe();
-    }
-  }, [goal]);
+    // @ts-ignore
+    return new Date(progress.lastLoggedAt).toLocaleDateString('en-US', options);
+  }, [progress]);
 
   return (
-    <SafeAreaView style={styles.mainContainer}>
-      {!goal ? (
-        <ActivityIndicator color={Colors.brand.quaternary} />
-      ) : (
-        <>
-          <IconButton
-            icon='arrow-left'
-            style={{
-              position: 'absolute',
-              left: 16,
-              top: 54,
-            }}
-            onPress={() => router.back()}
-          />
-          <Portal>
-            <FAB.Group
-              open={isFabGroupOpen}
-              visible
-              variant='secondary'
-              fabStyle={styles.fab}
+    <Portal>
+      <Modal
+        visible={visible}
+        onDismiss={() => {
+          form.reset({ progressDescription: '' });
+          handleClose();
+        }}
+        contentContainerStyle={{
+          backgroundColor: Colors.brand.cream,
+          padding: 20,
+          marginHorizontal: 20,
+          borderRadius: 8,
+        }}
+      >
+        <View style={{ position: 'relative', justifyContent: 'space-between' }}>
+          <Text
+            variant='titleLarge'
+            style={{ color: Colors.brand.charcoal, fontWeight: '600' }}
+          >
+            {t('updateYourProgress')}
+          </Text>
+          <Text>
+            {t('completedDate', {
+              date: completedDate,
+              interpolation: {
+                escapeValue: false,
+              },
+            })}
+          </Text>
+          <View style={{ gap: 4, marginVertical: 16 }}>
+            <View>
+              <Controller
+                control={form.control}
+                rules={{
+                  required: false,
+                  max: {
+                    value: 160,
+                    message: t('formValidation.maxLength', { count: 160 }),
+                  },
+                }}
+                name='progressDescription'
+                render={({ field }) => (
+                  <TextInput
+                    mode='outlined'
+                    multiline
+                    returnKeyLabel='done'
+                    returnKeyType='done'
+                    label={t('description')}
+                    onBlur={field.onBlur}
+                    placeholder={t('descriptionOptional')}
+                    outlineStyle={{
+                      borderWidth: 2,
+                      borderColor: Colors.brand.charcoal,
+                    }}
+                    blurOnSubmit
+                    value={field.value}
+                    onChangeText={field.onChange}
+                    activeOutlineColor={Colors.brand.charcoal}
+                    error={Boolean(
+                      form.formState.errors.progressDescription?.message
+                    )}
+                    textColor={Colors.brand.charcoal}
+                    style={{
+                      verticalAlign: 'top',
+                      backgroundColor: Colors.brand.cream,
+                      minHeight: 100,
+                    }}
+                  />
+                )}
+              />
+              {form.formState.errors.progressDescription && (
+                <InputError
+                  message={
+                    form.formState.errors.progressDescription.message?.toString() ??
+                    t('error')
+                  }
+                />
+              )}
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', gap: 8 }}>
+            <Button
               style={{
+                borderColor: Colors.brand.charcoal,
+                borderWidth: 2,
+                borderRadius: 4,
                 shadowColor: Colors.brand.charcoal,
-                shadowOffset: { width: 2, height: 2 },
-                shadowRadius: 0,
                 shadowOpacity: 1,
+                shadowOffset: { width: 2, height: 2 },
               }}
-              onStateChange={({ open }) => setIsFabGroupOpen(open)}
-              actions={[
-                {
-                  icon: 'pencil',
-                  label: t('editGoal'),
-                  style: { backgroundColor: Colors.brand.primary },
-                  onPress: () => setIsEditGoalModalVisible(true),
-                },
-                {
-                  icon: 'trash-can',
-                  label: t('deleteGoal'),
-                  style: { backgroundColor: Colors.brand.primary },
-                  onPress: () => setIsDeleteGoalModalVisible(true),
-                },
-                {
-                  icon: 'arrow-left',
-                  label: t('back'),
-                  style: { backgroundColor: Colors.brand.primary },
-                  onPress: () => router.back(),
-                },
-              ]}
-              color={Colors.brand.charcoal}
-              icon='dots-horizontal'
-              aria-label={t('addAGoal')}
-              rippleColor={Colors.brand.secondary}
-            />
-          </Portal>
-          <ProgressGrid
-            goal={goal}
-            goalProgress={goalProgress}
-            description={goal.description}
-            setSelectedCell={setActiveCellNumber}
-            setCanDeleteActiveCell={setCanDeleteActiveCell}
-            setEditingProgress={setEditingProgress}
-          />
-          <AddProgressModal
-            visible={activeCellNumber !== null}
-            handleSubmitProgress={handleSubmitProgress}
-            handleClose={() => setActiveCellNumber(null)}
-          />
-          <EditProgressModal
-            visible={editingProgress !== null}
-            handleClose={() => setEditingProgress(null)}
-            handleEditProgress={handleEditProgress}
-            handleDeleteProgress={handleDeleteProgress}
-            progress={editingProgress}
-            canDeleteActive={canDeleteActiveCell || false}
-          />
-          <DeleteGoalModal
-            visible={isDeleteGoalModalVisible}
-            handleDeleteGoal={() => handleDeleteGoal(goal)}
-            handleClose={() => setIsDeleteGoalModalVisible(false)}
-          />
-          <EnhancedEditGoalModal
-            database={database}
-            visible={isEditGoalModalVisible}
-            handleClose={() => setIsEditGoalModalVisible(false)}
-            goalId={goal.id}
-            handleEditGoal={async (data: Record<string, any>) =>
-              await handleEditGoal({ data, goal })
-            }
-          />
-        </>
-      )}
-    </SafeAreaView>
+              buttonColor={Colors.brand.primary}
+              textColor={Colors.brand.charcoal}
+              compact
+              mode='outlined'
+              onPress={form.handleSubmit(handleEditProgress)}
+            >
+              {t('update')}
+            </Button>
+            <Button
+              textColor={Colors.brand.charcoal}
+              buttonColor={Colors.brand.pictonBlue}
+              style={{
+                borderRadius: 4,
+                borderWidth: 2,
+                borderColor: Colors.brand.charcoal,
+                shadowColor: Colors.brand.charcoal,
+                shadowOpacity: 1,
+                shadowOffset: { width: 2, height: 2 },
+              }}
+              compact
+              mode='outlined'
+              onPress={() => {
+                handleClose();
+              }}
+            >
+              {t('close')}
+            </Button>
+          </View>
+        </View>
+      </Modal>
+    </Portal>
   );
 }
-
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    backgroundColor: Colors.brand.cream,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  fab: {
-    shadowColor: Colors.brand.charcoal,
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 1,
-    borderWidth: 2,
-    shadowRadius: 0,
-    borderColor: Colors.brand.charcoal,
-    backgroundColor: Colors.brand.primary,
-  },
-});
