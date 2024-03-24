@@ -30,9 +30,6 @@ export default function Page() {
 
   // We store the tapped cell number in this state
   const [activeCellNumber, setActiveCellNumber] = useState<number | null>(null);
-  const [canDeleteActiveCell, setCanDeleteActiveCell] = useState<
-    boolean | null
-  >(null);
 
   const [editingProgress, setEditingProgress] = useState<Progress | null>(null);
 
@@ -196,7 +193,6 @@ export default function Page() {
             goalProgress={goalProgress}
             description={goal.description}
             setSelectedCell={setActiveCellNumber}
-            setCanDeleteActiveCell={setCanDeleteActiveCell}
             setEditingProgress={setEditingProgress}
           />
           <AddProgressModal
@@ -209,7 +205,6 @@ export default function Page() {
             handleClose={() => setEditingProgress(null)}
             handleEditProgress={handleEditProgress}
             progress={editingProgress}
-            canDeleteActive={canDeleteActiveCell || false}
           />
           <DeleteGoalModal
             visible={isDeleteGoalModalVisible}
