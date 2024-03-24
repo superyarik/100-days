@@ -40,8 +40,6 @@ export function EditProgressModal({
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] =
     useState(false);
 
-  console.log(canDeleteActive);
-
   const form = useForm({
     defaultValues: {
       progressDescription: progress?.description,
