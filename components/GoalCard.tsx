@@ -38,9 +38,15 @@ const GoalCard = ({
       day: 'numeric',
     };
 
+    // If we've logged any progress, get the last one
+    const lastProgress = progresses[progresses.length - 1];
+
+    // If we have a last progress, use its date, otherwise use the goal's creation date
+    let updatedDate = lastProgress ? lastProgress.lastLoggedAt : goal.createdAt;
+
     // @ts-ignore
-    return new Date(goal.updatedAt).toLocaleDateString(locale, dateOptions);
-  }, [goal.updatedAt]);
+    return new Date(updatedDate).toLocaleDateString(locale, dateOptions);
+  }, [goal.updatedAt, progresses]);
 
   return (
     <>
