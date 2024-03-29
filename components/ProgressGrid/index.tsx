@@ -118,6 +118,7 @@ export function ProgressGrid({
                 // Sanity check
                 if (currentDate && previousDate) {
                   // If the dates are different, we have more than one day between the two
+                  // TODO: When we allow date editing in the future, this will need to be updated
                   moreThanOneDay = currentDateObjDate !== previousDateObjDate;
                 }
               }
