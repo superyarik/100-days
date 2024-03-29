@@ -110,9 +110,15 @@ export function ProgressGrid({
                 const currentDate = goalProgress.find(
                   (p: Progress) => p.cellNumber === cellNumber
                 )?.lastLoggedAt;
+
+                // Get the date of the previous cell and the current cell (date of the month)
+                const previousDateObjDate = new Date(previousDate).getDate();
+                const currentDateObjDate = new Date(currentDate).getDate();
+
                 // Sanity check
                 if (currentDate && previousDate) {
-                  moreThanOneDay = currentDate - previousDate > 86400000;
+                  // If the dates are different, we have more than one day between the two
+                  moreThanOneDay = currentDateObjDate !== previousDateObjDate;
                 }
               }
             }
