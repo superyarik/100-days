@@ -92,7 +92,7 @@ export default function Page() {
   }: {
     description: string;
   }) => {
-    const todayDate = new Date();
+    const todayDate = new Date().getTime();
     await database.write(async () => {
       await database.get('progresses').create((progress: Progress) => {
         progress.description = description;
