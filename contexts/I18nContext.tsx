@@ -1,25 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import * as Localization from 'expo-localization';
-import { initReactI18next } from 'react-i18next';
-import i18n from 'i18next';
-import en from '@/services/i18n/en-US.json';
-import pt from '@/services/i18n/pt-PT.json';
-import cn from '@/services/i18n/zh-CN.json';
-import es from '@/services/i18n/es-ES.json';
-import fr from '@/services/i18n/fr-FR.json';
-import de from '@/services/i18n/de-DE.json';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18next from 'i18next';
-
-// Set the key-value pairs for the different languages you want to support.
-const resources = {
-  en,
-  pt,
-  cn,
-  es,
-  fr,
-  de,
-};
 
 const I18nContext = createContext({});
 
