@@ -13,15 +13,19 @@ import { IconButton, Text } from 'react-native-paper';
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useI18n } from '@/contexts/I18nContext';
-import i18next from 'i18next';
 import { languages } from '@/constants/languages';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 const paddingHorizontal = width * 0.1;
 
-// RN Code
-const Item = ({ item, locale }: { item: any; locale: string }) => {
+const Item = ({
+  item,
+  locale,
+}: {
+  item: Record<string, any>;
+  locale: string;
+}) => {
   // @ts-ignore
   const { setLocale } = useI18n();
   const { t } = useTranslation();
