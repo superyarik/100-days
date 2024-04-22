@@ -33,7 +33,7 @@
     "youSureWarningNotifications": "Are you sure you want to turn off all notifications?",
     "notificationsDisabledWarning": "Your notifications settings are disabled for this app. Check your settings to enable notifications.",
     "checkNotifications": "Check notifications",
-    "editGoalName": "Edit goal {{title}}",
+    "editGoalName": "Edit goal: {{title}}",
     "create": "Create",
     "close": "Close",
     "error": "Error",

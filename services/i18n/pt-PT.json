@@ -32,7 +32,7 @@
     "youSureWarningNotifications": "Tem certeza de que deseja desativar todas as notificações?",
     "notificationsDisabledWarning": "As configurações de notificações estão desativadas para este aplicativo. Verifique suas configurações para ativar as notificações.",
     "checkNotifications": "Verificar notificações",
-    "editGoalName": "Editar o objetivo {{title}}",
+    "editGoalName": "Editar o objetivo: {{title}}",
     "create": "Criar",
     "close": "Fechar",
     "error": "Erro",

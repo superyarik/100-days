@@ -12,7 +12,7 @@ import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
 import { Goal } from '@/watermelon/models';
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import {
   cancelScheduledNotificationAsync,
@@ -23,7 +23,6 @@ import { times } from '@/constants/times';
 import { NotificationModal } from './NotificationModal';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { Database } from '@nozbe/watermelondb';
-import { useFocusEffect } from 'expo-router';
 import {
   IosAuthorizationStatus,
   getPermissionsAsync,
@@ -59,12 +58,6 @@ function EditGoalModal({
 
   const [isNotificationModalVisible, setIsNotificationModalVisible] =
     useState(false);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setReminders(Boolean(goal.notificationId));
-  //   }, [goal.notificationId])
-  // );
 
   const handleReminderChange = async (value: boolean) => {
     if (value === false) {

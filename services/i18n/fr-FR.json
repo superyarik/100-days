@@ -33,7 +33,7 @@
     "youSureWarningNotifications": "Êtes-vous sûr de vouloir désactiver toutes les notifications?",
     "notificationsDisabledWarning": "Les paramètres de notifications sont désactivés pour cette application. Vérifiez vos paramètres pour activer les notifications.",
     "checkNotifications": "Vérifier les notifications",
-    "editGoalName": "Modifier l'objectif {{title}}",
+    "editGoalName": "Modifier l'objectif: {{title}}",
     "create": "Créer",
     "close": "Fermer",
     "error": "Erreur",

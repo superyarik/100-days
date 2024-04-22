@@ -107,7 +107,7 @@ export default function TabTwoScreen() {
           shadowRadius: 0,
         }}
         onPress={() => router.push('/language')}
-        icon='bell'
+        icon='book-open-variant'
       >
         {t('language_one')}
       </Button>

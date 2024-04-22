@@ -17,6 +17,7 @@ import {
   scheduleNotificationAndGetID,
 } from '@/services/notificationsService';
 import { useTranslation } from 'react-i18next';
+import { Model } from '@nozbe/watermelondb';
 
 export default function Page() {
   const { t } = useTranslation();
@@ -94,11 +95,12 @@ export default function Page() {
   }) => {
     const todayDate = new Date().getTime();
     await database.write(async () => {
-      await database.get('progresses').create((progress: Progress) => {
-        progress.description = description;
-        progress.goal.set(goal);
-        progress.cellNumber = activeCellNumber;
-        progress.lastLoggedAt = todayDate;
+      await database.get('progresses').create((progress: Model) => {
+        const myProgress = progress as Progress;
+        myProgress.description = description;
+        myProgress.goal.set(goal);
+        myProgress.cellNumber = activeCellNumber;
+        myProgress.lastLoggedAt = todayDate;
       });
     });
   };
@@ -128,11 +130,13 @@ export default function Page() {
   };
 
   useEffect(() => {
+    if (typeof id !== 'string') return;
+
     // Find the goal by ID and observe changes
     const goalSubscription = database.collections
       .get('goals')
       .findAndObserve(id)
-      .subscribe(setGoal);
+      .subscribe((value: Model) => setGoal(value as Goal));
 
     return () => goalSubscription.unsubscribe();
   }, [database, id]);
