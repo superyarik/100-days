@@ -129,6 +129,12 @@ export default function Page() {
     setCanDeleteEditingProgress(false);
   };
 
+  const clearGoalProgresses = async (progressList: Progress[]) => {
+    database.write(async () => {
+      await Promise.all(progressList.map((p) => p.destroyPermanently()));
+    });
+  };
+
   useEffect(() => {
     if (typeof id !== 'string') return;
 
@@ -212,6 +218,7 @@ export default function Page() {
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
             setCanDeleteEditingProgress={setCanDeleteEditingProgress}
+            clearProgress={clearGoalProgresses}
           />
           <AddProgressModal
             visible={activeCellNumber !== null}

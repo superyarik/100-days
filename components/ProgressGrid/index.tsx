@@ -1,11 +1,16 @@
 import Colors from '@/constants/Colors';
 import { Goal, Progress } from '@/watermelon/models';
 import { useMemo, useState } from 'react';
-import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
-import { ActivityIndicator, Text } from 'react-native-paper';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Portal,
+  Text,
+} from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
-import { set } from 'react-hook-form';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -21,6 +26,7 @@ export function ProgressGrid({
   setSelectedCell,
   setEditingProgress,
   setCanDeleteEditingProgress,
+  clearProgress,
 }: {
   goal: Goal | null;
   goalProgress: Progress[];
@@ -28,6 +34,7 @@ export function ProgressGrid({
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
   setCanDeleteEditingProgress: (value: boolean) => void;
+  clearProgress: (progresses: Progress[]) => void;
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -79,7 +86,12 @@ export function ProgressGrid({
               alignItems: 'baseline',
             }}
           >
-            <Text variant='headlineLarge' style={{ marginBottom: 10 }}>
+            <Text
+              variant='headlineLarge'
+              style={{
+                marginBottom: 10,
+              }}
+            >
               {goal.title}
             </Text>
             <Text variant='headlineLarge'>
@@ -121,6 +133,12 @@ export function ProgressGrid({
                   // TODO: When we allow date editing in the future, this will need to be updated
                   moreThanOneDay = currentDateObjDate !== previousDateObjDate;
                 }
+
+                if (moreThanOneDay) {
+                  if (goal.hardMode) {
+                    setErrorMessage(t('hardModeError'));
+                  }
+                }
               }
             }
 
@@ -153,6 +171,37 @@ export function ProgressGrid({
             <Text variant='headlineSmall'>{t('description')}:</Text>
             <Text variant='bodyMedium'>{description}</Text>
           </View>
+          <Portal>
+            <Dialog
+              style={{ borderRadius: 8, backgroundColor: Colors.brand.cream }}
+              visible={Boolean(errorMessage)}
+              onDismiss={() => setErrorMessage('')}
+            >
+              <Dialog.Title>{t('uhOh')}</Dialog.Title>
+              <Dialog.Content>
+                <Text variant='bodyMedium'>{errorMessage}</Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button
+                  mode='outlined'
+                  style={{
+                    borderRadius: 4,
+                    borderWidth: 2,
+                    borderColor: Colors.brand.charcoal,
+                    shadowColor: Colors.brand.charcoal,
+                    shadowOpacity: 1,
+                    shadowOffset: { width: 2, height: 2 },
+                    shadowRadius: 0,
+                  }}
+                  buttonColor={Colors.brand.pictonBlue}
+                  textColor={Colors.brand.charcoal}
+                  onPress={() => setErrorMessage('')}
+                >
+                  {t('close')}
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </>
       )}
     </View>

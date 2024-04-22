@@ -11,6 +11,7 @@ import { scheduleNotificationAndGetID } from '@/services/notificationsService';
 import useObserveGoals from '@/hooks/useObserveGoals';
 import { useTranslation } from 'react-i18next';
 import { Goal } from '@/watermelon/models';
+import { Model } from '@nozbe/watermelondb';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -33,27 +34,39 @@ export default function HomeScreen() {
   const handleAddItem = async ({
     title,
     description,
+    hardMode,
   }: {
     title: string;
     description: string;
+    hardMode: boolean;
   }) => {
     await database.write(async () => {
       const notificationId = await scheduleNotificationAndGetID({
         goalName: title,
       });
-      await database.get('goals').create((goal: Goal) => {
-        goal.title = title;
-        goal.description = description;
-        goal.status = 'active';
-        goal.notificationId = notificationId;
-        goal.notificationHour = 9;
+      await database.get('goals').create((goal: Model) => {
+        (goal as Goal).title = title;
+        (goal as Goal).description = description;
+        (goal as Goal).status = 'active';
+        (goal as Goal).notificationId = notificationId;
+        (goal as Goal).notificationHour = 9;
+        (goal as Goal).hardMode = hardMode;
       });
     });
   };
 
-  const handleAddGoal = async (data: Record<string, string>) => {
+  const handleAddGoal = async (data: {
+    goalTitle: string;
+    goalDescription: string;
+    hardMode: boolean;
+  }) => {
+    console.log(data);
     setAddGoalModalVisible(false);
-    handleAddItem({ title: data.goalTitle, description: data.goalDescription });
+    handleAddItem({
+      title: data.goalTitle,
+      description: data.goalDescription,
+      hardMode: data.hardMode,
+    });
   };
 
   const noGoals = useMemo(() => {

@@ -1,5 +1,12 @@
 import { View } from 'react-native';
-import { Portal, Modal, Text, Button, TextInput } from 'react-native-paper';
+import {
+  Portal,
+  Modal,
+  Text,
+  Button,
+  TextInput,
+  Switch,
+} from 'react-native-paper';
 import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
@@ -11,7 +18,11 @@ export function AddGoalModal({
   handleClose,
 }: {
   visible: boolean;
-  handleAddGoal: (data: Record<string, any>) => void;
+  handleAddGoal: (data: {
+    goalTitle: string;
+    goalDescription: string;
+    hardMode: boolean;
+  }) => void;
   handleClose: () => void;
 }) {
   const { t } = useTranslation();
@@ -20,14 +31,20 @@ export function AddGoalModal({
     defaultValues: {
       goalTitle: '',
       goalDescription: '',
+      hardMode: false,
     },
   });
 
-  const onSubmit = (data: Record<string, any>) => {
+  const onSubmit = (data: {
+    goalTitle: string;
+    goalDescription: string;
+    hardMode: boolean;
+  }) => {
     handleAddGoal(data);
     form.reset({
       goalTitle: '',
       goalDescription: '',
+      hardMode: false,
     });
   };
 
@@ -133,41 +150,67 @@ export function AddGoalModal({
               )}
             </View>
           </View>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Button
+          <View>
+            <View
               style={{
-                borderColor: Colors.brand.charcoal,
-                borderWidth: 2,
-                borderRadius: 4,
-                shadowColor: Colors.brand.charcoal,
-                shadowOpacity: 1,
-                shadowOffset: { width: 2, height: 2 },
+                marginBottom: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 4,
               }}
-              buttonColor={Colors.brand.primary}
-              textColor={Colors.brand.charcoal}
-              compact
-              mode='outlined'
-              onPress={form.handleSubmit(onSubmit)}
             >
-              {t('create')}
-            </Button>
-            <Button
-              textColor={Colors.brand.charcoal}
-              buttonColor={Colors.brand.pictonBlue}
-              style={{
-                borderRadius: 4,
-                borderWidth: 2,
-                borderColor: Colors.brand.charcoal,
-                shadowColor: Colors.brand.charcoal,
-                shadowOpacity: 1,
-                shadowOffset: { width: 2, height: 2 },
-              }}
-              compact
-              mode='outlined'
-              onPress={handleClose}
-            >
-              {t('close')}
-            </Button>
+              <Controller
+                control={form.control}
+                name='hardMode'
+                rules={{ required: false }}
+                render={({ field }) => (
+                  <Switch
+                    disabled={form.formState.isSubmitting}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  />
+                )}
+              />
+              <Text style={{ color: Colors.brand.charcoal }}>
+                {t('hardMode')} ({t('hardModeDescription')})
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              <Button
+                style={{
+                  borderColor: Colors.brand.charcoal,
+                  borderWidth: 2,
+                  borderRadius: 4,
+                  shadowColor: Colors.brand.charcoal,
+                  shadowOpacity: 1,
+                  shadowOffset: { width: 2, height: 2 },
+                }}
+                buttonColor={Colors.brand.primary}
+                textColor={Colors.brand.charcoal}
+                compact
+                mode='outlined'
+                onPress={form.handleSubmit(onSubmit)}
+              >
+                {t('create')}
+              </Button>
+              <Button
+                textColor={Colors.brand.charcoal}
+                buttonColor={Colors.brand.pictonBlue}
+                style={{
+                  borderRadius: 4,
+                  borderWidth: 2,
+                  borderColor: Colors.brand.charcoal,
+                  shadowColor: Colors.brand.charcoal,
+                  shadowOpacity: 1,
+                  shadowOffset: { width: 2, height: 2 },
+                }}
+                compact
+                mode='outlined'
+                onPress={handleClose}
+              >
+                {t('close')}
+              </Button>
+            </View>
           </View>
         </View>
       </Modal>
