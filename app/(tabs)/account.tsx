@@ -10,6 +10,7 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Snackbar, Text } from 'react-native-paper';
 import { useI18n } from '@/contexts/I18nContext';
 import { router } from 'expo-router';
+import { Model } from '@nozbe/watermelondb';
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
@@ -41,9 +42,9 @@ export default function TabTwoScreen() {
       const goals = await database.collections.get('goals').query().fetch();
 
       // Create an array of update operations
-      const updates = goals.map((goal: Goal) =>
-        goal.prepareUpdate((goal: Goal) => {
-          goal.notificationId = ''; // Set notificationId to an empty string
+      const updates = goals.map((goal: Model) =>
+        (goal as Goal).prepareUpdate((goal: Model) => {
+          (goal as Goal).notificationId = ''; // Set notificationId to an empty string
         })
       );
 

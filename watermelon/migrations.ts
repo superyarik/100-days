@@ -7,6 +7,15 @@ import {
 export default schemaMigrations({
   migrations: [
     {
+      toVersion: 10,
+      steps: [
+        addColumns({
+          table: 'goals',
+          columns: [{ name: 'hard_mode', type: 'boolean', isOptional: true }],
+        }),
+      ],
+    },
+    {
       toVersion: 9,
       steps: [
         createTable({

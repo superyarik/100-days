@@ -30,6 +30,9 @@ export class Goal extends Model {
   @field('notification_hour') notificationHour: number;
 
   // @ts-ignore
+  @field('hard_mode') hardMode: boolean;
+
+  // @ts-ignore
   @readonly @date('created_at') createdAt;
   // @ts-ignore
   @readonly @date('updated_at') updatedAt;
