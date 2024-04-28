@@ -61,7 +61,7 @@
     }
   },
   "submit": {
-    "staging": {
+    "preview": {
       "ios": {
         "appleId": "support@westmorelandcreative.com",
         "appleTeamId": "KUF6U27VW2",
