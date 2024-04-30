@@ -59,9 +59,6 @@ export function ProgressGrid({
         setErrorMessage(t('errorEditingItem'));
       }
     }
-    if (goalProgress.some((p: Progress) => p.cellNumber === cellNumber)) {
-      setErrorMessage(t('alreadyChecked'));
-    }
   };
 
   const lastCheckedCell = useMemo(() => {
