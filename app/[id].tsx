@@ -18,11 +18,14 @@ import {
 } from '@/services/notificationsService';
 import { useTranslation } from 'react-i18next';
 import { Model } from '@nozbe/watermelondb';
+import { findHardModeFailure } from '@/lib/utils';
 
 export default function Page() {
   const { t } = useTranslation();
   const database = useDatabase();
   const { id, description } = useLocalSearchParams();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [goal, setGoal] = useState<Goal | null>(null);
   const [goalProgress, setGoalProgress] = useState<Progress[]>([]);
@@ -157,9 +160,22 @@ export default function Page() {
     }
   }, [goal]);
 
+  useEffect(() => {
+    const determineHardModeFailure = async () => {
+      const hardModeFailed = await findHardModeFailure(goalProgress);
+
+      if (hardModeFailed) {
+        clearGoalProgresses(goalProgress);
+      }
+
+      setIsLoading(false);
+    };
+    determineHardModeFailure();
+  }, [goalProgress]);
+
   return (
     <SafeAreaView style={styles.mainContainer}>
-      {!goal ? (
+      {!goal || isLoading ? (
         <ActivityIndicator color={Colors.brand.quaternary} />
       ) : (
         <>

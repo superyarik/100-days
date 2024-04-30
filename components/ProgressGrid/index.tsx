@@ -1,6 +1,6 @@
 import Colors from '@/constants/Colors';
 import { Goal, Progress } from '@/watermelon/models';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import {
   ActivityIndicator,
@@ -11,6 +11,7 @@ import {
 } from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
+import { findHardModeFailure } from '@/lib/utils';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -115,26 +116,19 @@ export function ProgressGrid({
 
               // Only if we have a previous cell
               if (previousCell) {
-                const previousDate = previousCell.lastLoggedAt;
-                const currentDate = goalProgress.find(
-                  (p: Progress) => p.cellNumber === cellNumber
-                )?.lastLoggedAt;
+                const previousDate = new Date(previousCell.lastLoggedAt);
+                const currentDate = new Date(
+                  goalProgress.find(
+                    (p: Progress) => p.cellNumber === cellNumber
+                  )?.lastLoggedAt
+                );
 
-                // Get the date of the previous cell and the current cell (date of the month)
-                const previousDateObjDate = new Date(previousDate).getDate();
-                const currentDateObjDate = new Date(currentDate).getDate();
-
-                // Sanity check
                 if (currentDate && previousDate) {
-                  // If the dates are different, we have more than one day between the two
-                  // TODO: When we allow date editing in the future, this will need to be updated
-                  moreThanOneDay = currentDateObjDate !== previousDateObjDate;
-                }
+                  const timeDiff =
+                    currentDate.getTime() - previousDate.getTime();
 
-                if (moreThanOneDay) {
-                  if (goal.hardMode) {
-                    setErrorMessage(t('hardModeError'));
-                  }
+                  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+                  moreThanOneDay = daysDiff > 1;
                 }
               }
             }
