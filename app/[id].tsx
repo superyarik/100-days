@@ -170,7 +170,9 @@ export default function Page() {
 
       setIsLoading(false);
     };
-    determineHardModeFailure();
+    if (goal?.hardMode) {
+      determineHardModeFailure();
+    }
   }, [goalProgress]);
 
   return (
