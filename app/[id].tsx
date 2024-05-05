@@ -172,7 +172,7 @@ export default function Page() {
     };
     if (goal?.hardMode) {
       determineHardModeFailure();
-    }
+    } else setIsLoading(false);
   }, [goalProgress]);
 
   return (
