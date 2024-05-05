@@ -1,4 +1,5 @@
 import Colors from '@/constants/Colors';
+import { useI18n } from '@/contexts/I18nContext';
 import { Goal, Progress } from '@/watermelon/models';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { router } from 'expo-router';
@@ -16,6 +17,8 @@ const GoalCard = ({
   progresses: Progress[];
 }) => {
   const { t } = useTranslation();
+  // @ts-ignore
+  const { locale } = useI18n();
 
   const createdAt = useMemo(() => {
     const dateOptions = {
@@ -25,7 +28,7 @@ const GoalCard = ({
     };
 
     // @ts-ignore
-    return new Date(goal.createdAt).toLocaleDateString('en-US', dateOptions);
+    return new Date(goal.createdAt).toLocaleDateString(locale, dateOptions);
   }, [goal.createdAt]);
 
   const updatedAt = useMemo(() => {
@@ -35,9 +38,15 @@ const GoalCard = ({
       day: 'numeric',
     };
 
+    // If we've logged any progress, get the last one
+    const lastProgress = progresses[progresses.length - 1];
+
+    // If we have a last progress, use its date, otherwise use the goal's creation date
+    let updatedDate = lastProgress ? lastProgress.lastLoggedAt : goal.createdAt;
+
     // @ts-ignore
-    return new Date(goal.updatedAt).toLocaleDateString('en-US', dateOptions);
-  }, [goal.updatedAt]);
+    return new Date(updatedDate).toLocaleDateString(locale, dateOptions);
+  }, [goal.updatedAt, progresses]);
 
   return (
     <>

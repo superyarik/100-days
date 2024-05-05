@@ -1,32 +1,40 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import * as Localization from 'expo-localization';
-import { initReactI18next, useTranslation } from 'react-i18next';
-import i18n from 'i18next';
-import en from '@/services/i18n/en.json';
-import pt from '@/services/i18n/pt.json';
-
-// Set the key-value pairs for the different languages you want to support.
-const resources = {
-  en,
-  pt,
-};
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18next from 'i18next';
 
 const I18nContext = createContext({});
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocale] = useState(Localization.locale);
-  const { t } = useTranslation();
+  const [locale, setLocale] = useState<string | null>();
+
+  const updateLocale = async (locale: string) => {
+    await AsyncStorage.setItem('hundred_locale', locale);
+    i18next.changeLanguage(locale);
+    setLocale(locale);
+  };
 
   useEffect(() => {
-    i18n.use(initReactI18next).init({
-      compatibilityJSON: 'v3',
-      resources,
-      lng: locale,
-    });
+    if (locale) return;
+    const loadLocales = async () => {
+      const storedLocale = await AsyncStorage.getItem('hundred_locale');
+      if (storedLocale) {
+        setLocale(storedLocale);
+      } else {
+        const locale = Localization.getLocales()?.[0].languageTag;
+        setLocale(locale);
+      }
+    };
+    loadLocales();
   }, [locale]);
 
   return (
-    <I18nContext.Provider value={{ i18n, setLocale, locale, t }}>
+    <I18nContext.Provider
+      value={{
+        setLocale: async (locale: string) => await updateLocale(locale),
+        locale,
+      }}
+    >
       {children}
     </I18nContext.Provider>
   );

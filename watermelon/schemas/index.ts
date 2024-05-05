@@ -1,8 +1,12 @@
 import { appSchema, tableSchema } from '@nozbe/watermelondb';
 
 export const schema = appSchema({
-  version: 8,
+  version: 10,
   tables: [
+    tableSchema({
+      name: 'user_profiles',
+      columns: [{ name: 'locale', type: 'string', isOptional: true }],
+    }),
     tableSchema({
       name: 'goals',
       columns: [
@@ -13,6 +17,7 @@ export const schema = appSchema({
         { name: 'updated_at', type: 'number' },
         { name: 'notification_id', type: 'string', isOptional: true },
         { name: 'notification_hour', type: 'number', isOptional: true },
+        { name: 'hard_mode', type: 'boolean', isOptional: true },
       ],
     }),
     tableSchema({

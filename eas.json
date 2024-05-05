@@ -61,17 +61,17 @@
     }
   },
   "submit": {
-    "staging": {
+    "preview": {
       "ios": {
-        "appleId": "rawestmoreland@gmail.com",
-        "appleTeamId": "KK7SBV699A",
+        "appleId": "support@westmorelandcreative.com",
+        "appleTeamId": "KUF6U27VW2",
         "ascAppId": "6478966966"
       }
     },
     "production": {
       "ios": {
-        "appleId": "rawestmoreland@gmail.com",
-        "appleTeamId": "KK7SBV699A",
+        "appleId": "support@westmorelandcreative.com",
+        "appleTeamId": "KUF6U27VW2",
         "ascAppId": "6478966966"
       }
     }

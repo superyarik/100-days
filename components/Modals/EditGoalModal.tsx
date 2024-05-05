@@ -12,8 +12,8 @@ import Colors from '@/constants/Colors';
 import { useForm, Controller } from 'react-hook-form';
 import { InputError } from '../Forms/InputError';
 import { Goal } from '@/watermelon/models';
-import { useCallback, useMemo, useState } from 'react';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useMemo, useState } from 'react';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import {
   cancelScheduledNotificationAsync,
   scheduleNotificationAndGetID,
@@ -23,7 +23,6 @@ import { times } from '@/constants/times';
 import { NotificationModal } from './NotificationModal';
 import { withObservables } from '@nozbe/watermelondb/react';
 import { Database } from '@nozbe/watermelondb';
-import { useFocusEffect } from 'expo-router';
 import {
   IosAuthorizationStatus,
   getPermissionsAsync,
@@ -41,9 +40,9 @@ function EditGoalModal({
   handleEditGoal: (data: any) => void;
   handleClose: () => void;
 }) {
+  const database = useDatabase();
   const { t } = useTranslation();
 
-  const database = useDatabase();
   const form = useForm({
     defaultValues: {
       goalTitle: goal.title,
@@ -52,12 +51,6 @@ function EditGoalModal({
   });
 
   const [reminders, setReminders] = useState(Boolean(goal.notificationId));
-
-  useFocusEffect(
-    useCallback(() => {
-      setReminders(Boolean(goal.notificationId));
-    }, [goal.notificationId])
-  );
 
   const [selectedTime, setSelectedTime] = useState(
     (goal.notificationHour ?? 9).toString()
@@ -74,6 +67,7 @@ function EditGoalModal({
           g.notificationId = '';
         });
       });
+      setReminders(value);
     } else {
       const res = await getPermissionsAsync();
 

@@ -1,13 +1,16 @@
 import { DeleteAllModal } from '@/components/Modals/DeleteAllModal';
 import { DisableNotificationsModal } from '@/components/Modals/DisableNotificationsModal';
 import Colors from '@/constants/Colors';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import { cancelAllScheduledNotificationsAsync } from '@/services/notificationsService';
 import { Goal } from '@/watermelon/models';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Snackbar, Text } from 'react-native-paper';
+import { useI18n } from '@/contexts/I18nContext';
+import { router } from 'expo-router';
+import { Model } from '@nozbe/watermelondb';
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
@@ -39,9 +42,9 @@ export default function TabTwoScreen() {
       const goals = await database.collections.get('goals').query().fetch();
 
       // Create an array of update operations
-      const updates = goals.map((goal: Goal) =>
-        goal.prepareUpdate((goal: Goal) => {
-          goal.notificationId = ''; // Set notificationId to an empty string
+      const updates = goals.map((goal: Model) =>
+        (goal as Goal).prepareUpdate((goal: Model) => {
+          (goal as Goal).notificationId = ''; // Set notificationId to an empty string
         })
       );
 
@@ -90,6 +93,24 @@ export default function TabTwoScreen() {
         icon='bell'
       >
         {t('disableAllNotifications')}
+      </Button>
+      <Button
+        mode='outlined'
+        buttonColor={Colors.brand.tertiary}
+        textColor={Colors.brand.cream}
+        style={{
+          borderWidth: 2,
+          borderColor: Colors.brand.charcoal,
+          borderRadius: 4,
+          shadowColor: Colors.brand.charcoal,
+          shadowOpacity: 1,
+          shadowOffset: { width: 3, height: 3 },
+          shadowRadius: 0,
+        }}
+        onPress={() => router.push('/language')}
+        icon='book-open-variant'
+      >
+        {t('language_one')}
       </Button>
       <DeleteAllModal
         visible={isDeleteAllModalVisible}

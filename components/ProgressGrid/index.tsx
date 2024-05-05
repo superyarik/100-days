@@ -1,10 +1,17 @@
 import Colors from '@/constants/Colors';
 import { Goal, Progress } from '@/watermelon/models';
-import { useMemo, useState } from 'react';
-import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
-import { ActivityIndicator, Text } from 'react-native-paper';
+import { useEffect, useMemo, useState } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Portal,
+  Text,
+} from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
+import { findHardModeFailure } from '@/lib/utils';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -19,12 +26,16 @@ export function ProgressGrid({
   description,
   setSelectedCell,
   setEditingProgress,
+  setCanDeleteEditingProgress,
+  clearProgress,
 }: {
   goal: Goal | null;
   goalProgress: Progress[];
   description: string | string[];
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
+  setCanDeleteEditingProgress: (value: boolean) => void;
+  clearProgress: (progresses: Progress[]) => void;
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,7 +52,10 @@ export function ProgressGrid({
         (p: Progress) => p.cellNumber === cellNumber && p.goal.id === goal?.id
       );
       if (progressToUpdate) {
+        const isDeletable =
+          goalProgress.indexOf(progressToUpdate) === goalProgress.length - 1;
         setEditingProgress(progressToUpdate);
+        setCanDeleteEditingProgress(isDeletable);
       } else {
         setErrorMessage(t('errorEditingItem'));
       }
@@ -70,7 +84,12 @@ export function ProgressGrid({
               alignItems: 'baseline',
             }}
           >
-            <Text variant='headlineLarge' style={{ marginBottom: 10 }}>
+            <Text
+              variant='headlineLarge'
+              style={{
+                marginBottom: 10,
+              }}
+            >
               {goal.title}
             </Text>
             <Text variant='headlineLarge'>
@@ -85,6 +104,35 @@ export function ProgressGrid({
             const cellCompleted = goalProgress.some(
               (p: Progress) => p.cellNumber === cellNumber
             );
+
+            let moreThanOneDay = false;
+
+            // Check to see if more than 24 hours have passed between lastLoggedDate
+            // and the previous cell's lastLoggedDate
+            if (cellCompleted) {
+              const previousCell = goalProgress.find(
+                (p: Progress) => p.cellNumber === cellNumber - 1
+              );
+
+              // Only if we have a previous cell
+              if (previousCell) {
+                const previousDate = new Date(previousCell.lastLoggedAt);
+                const currentDate = new Date(
+                  goalProgress.find(
+                    (p: Progress) => p.cellNumber === cellNumber
+                  )?.lastLoggedAt
+                );
+
+                if (currentDate && previousDate) {
+                  const timeDiff =
+                    currentDate.getTime() - previousDate.getTime();
+
+                  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+                  moreThanOneDay = daysDiff > 1;
+                }
+              }
+            }
+
             return (
               <ProgressSquare
                 key={index}
@@ -92,13 +140,19 @@ export function ProgressGrid({
                 disabled={cellDisabled}
                 squareSize={squareSize}
                 color={
-                  cellCompleted ? Colors.brand.quaternary : Colors.brand.cream
+                  moreThanOneDay
+                    ? Colors.brand.tertiary
+                    : cellCompleted && !moreThanOneDay
+                    ? Colors.brand.quaternary
+                    : Colors.brand.cream
                 }
                 borderColor={
-                  cellCompleted
-                    ? Colors.brand.quaternary
-                    : cellDisabled
+                  cellDisabled
                     ? 'gray'
+                    : moreThanOneDay
+                    ? Colors.brand.tertiary
+                    : cellCompleted && !moreThanOneDay
+                    ? Colors.brand.quaternary
                     : Colors.brand.charcoal
                 }
               />
@@ -108,6 +162,37 @@ export function ProgressGrid({
             <Text variant='headlineSmall'>{t('description')}:</Text>
             <Text variant='bodyMedium'>{description}</Text>
           </View>
+          <Portal>
+            <Dialog
+              style={{ borderRadius: 8, backgroundColor: Colors.brand.cream }}
+              visible={Boolean(errorMessage)}
+              onDismiss={() => setErrorMessage('')}
+            >
+              <Dialog.Title>{t('uhOh')}</Dialog.Title>
+              <Dialog.Content>
+                <Text variant='bodyMedium'>{errorMessage}</Text>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button
+                  mode='outlined'
+                  style={{
+                    borderRadius: 4,
+                    borderWidth: 2,
+                    borderColor: Colors.brand.charcoal,
+                    shadowColor: Colors.brand.charcoal,
+                    shadowOpacity: 1,
+                    shadowOffset: { width: 2, height: 2 },
+                    shadowRadius: 0,
+                  }}
+                  buttonColor={Colors.brand.pictonBlue}
+                  textColor={Colors.brand.charcoal}
+                  onPress={() => setErrorMessage('')}
+                >
+                  {t('close')}
+                </Button>
+              </Dialog.Actions>
+            </Dialog>
+          </Portal>
         </>
       )}
     </View>

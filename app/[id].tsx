@@ -1,12 +1,12 @@
 import { ProgressGrid } from '@/components/ProgressGrid';
 import Colors from '@/constants/Colors';
 import { useLocalSearchParams } from 'expo-router';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet } from 'react-native';
 import { ActivityIndicator, FAB, IconButton, Portal } from 'react-native-paper';
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { AddProgressModal } from '@/components/Modals/AddProgressModal';
-import { useDatabase } from '@/contexts/WaterMelonContext';
+import { useDatabase } from '@nozbe/watermelondb/react';
 import { Goal, Progress } from '@/watermelon/models';
 import { EditProgressModal } from '@/components/Modals/EditProgressModal';
 import { DeleteGoalModal } from '@/components/Modals/DeleteGoalModal';
@@ -17,11 +17,15 @@ import {
   scheduleNotificationAndGetID,
 } from '@/services/notificationsService';
 import { useTranslation } from 'react-i18next';
+import { Model } from '@nozbe/watermelondb';
+import { findHardModeFailure } from '@/lib/utils';
 
 export default function Page() {
   const { t } = useTranslation();
   const database = useDatabase();
   const { id, description } = useLocalSearchParams();
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const [goal, setGoal] = useState<Goal | null>(null);
   const [goalProgress, setGoalProgress] = useState<Progress[]>([]);
@@ -30,6 +34,8 @@ export default function Page() {
 
   // We store the tapped cell number in this state
   const [activeCellNumber, setActiveCellNumber] = useState<number | null>(null);
+  const [canDeleteEditingProgress, setCanDeleteEditingProgress] =
+    useState(false);
 
   const [editingProgress, setEditingProgress] = useState<Progress | null>(null);
 
@@ -39,6 +45,8 @@ export default function Page() {
 
   const handleDeleteGoal = async (goal: Goal) => {
     await database.write(async () => {
+      const goalNotification = goal.notificationId;
+      await cancelScheduledNotificationAsync(goalNotification);
       await goal.destroyPermanently();
       await goal.progresses.destroyAllPermanently();
     });
@@ -88,12 +96,14 @@ export default function Page() {
   }: {
     description: string;
   }) => {
+    const todayDate = new Date().getTime();
     await database.write(async () => {
-      await database.get('progresses').create((progress: Progress) => {
-        progress.description = description;
-        progress.goal.set(goal);
-        progress.cellNumber = activeCellNumber;
-        progress.lastLoggedAt = Date.now();
+      await database.get('progresses').create((progress: Model) => {
+        const myProgress = progress as Progress;
+        myProgress.description = description;
+        myProgress.goal.set(goal);
+        myProgress.cellNumber = activeCellNumber;
+        myProgress.lastLoggedAt = todayDate;
       });
     });
   };
@@ -112,12 +122,30 @@ export default function Page() {
     setActiveCellNumber(null);
   };
 
+  const handleDeleteProgress = async () => {
+    if (editingProgress && canDeleteEditingProgress) {
+      await database.write(async () => {
+        await editingProgress.destroyPermanently();
+      });
+    }
+    setEditingProgress(null);
+    setCanDeleteEditingProgress(false);
+  };
+
+  const clearGoalProgresses = async (progressList: Progress[]) => {
+    database.write(async () => {
+      await Promise.all(progressList.map((p) => p.destroyPermanently()));
+    });
+  };
+
   useEffect(() => {
+    if (typeof id !== 'string') return;
+
     // Find the goal by ID and observe changes
     const goalSubscription = database.collections
       .get('goals')
       .findAndObserve(id)
-      .subscribe(setGoal);
+      .subscribe((value: Model) => setGoal(value as Goal));
 
     return () => goalSubscription.unsubscribe();
   }, [database, id]);
@@ -132,9 +160,24 @@ export default function Page() {
     }
   }, [goal]);
 
+  useEffect(() => {
+    const determineHardModeFailure = async () => {
+      const hardModeFailed = await findHardModeFailure(goalProgress);
+
+      if (hardModeFailed) {
+        clearGoalProgresses(goalProgress);
+      }
+
+      setIsLoading(false);
+    };
+    if (goal?.hardMode) {
+      determineHardModeFailure();
+    }
+  }, [goalProgress]);
+
   return (
     <SafeAreaView style={styles.mainContainer}>
-      {!goal ? (
+      {!goal || isLoading ? (
         <ActivityIndicator color={Colors.brand.quaternary} />
       ) : (
         <>
@@ -192,6 +235,8 @@ export default function Page() {
             description={goal.description}
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
+            setCanDeleteEditingProgress={setCanDeleteEditingProgress}
+            clearProgress={clearGoalProgresses}
           />
           <AddProgressModal
             visible={activeCellNumber !== null}
@@ -203,6 +248,8 @@ export default function Page() {
             handleClose={() => setEditingProgress(null)}
             handleEditProgress={handleEditProgress}
             progress={editingProgress}
+            canDeleteActive={canDeleteEditingProgress}
+            handleDeleteProgress={handleDeleteProgress}
           />
           <DeleteGoalModal
             visible={isDeleteGoalModalVisible}
