@@ -124,10 +124,14 @@ export function ProgressGrid({
                 );
 
                 if (currentDate && previousDate) {
-                  const timeDiff =
-                    currentDate.getTime() - previousDate.getTime();
+                  previousDate.setHours(0, 0, 0, 0);
+                  currentDate.setHours(0, 0, 0, 0);
 
-                  const daysDiff = timeDiff / (1000 * 60 * 60 * 24);
+                  const timeDiff: number = Math.abs(
+                    currentDate.getTime() - previousDate.getTime()
+                  );
+
+                  const daysDiff: number = timeDiff / (1000 * 60 * 60 * 24);
                   moreThanOneDay = daysDiff > 1;
                 }
               }
