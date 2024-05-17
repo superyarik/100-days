@@ -32,6 +32,9 @@
       [
         "expo-build-properties",
         {
+          "ios": {
+            "useFrameworks": "static"
+          },
           "android": {
             "kotlinVersion": "1.6.10",
             "packagingOptions": {
@@ -40,7 +43,8 @@
           }
         }
       ],
-      "expo-localization"
+      "expo-localization",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
@@ -61,5 +65,8 @@
       "enabled": true,
       "url": "https://u.expo.dev/9e56f299-b0ca-494b-9b3b-7040a9521ed6"
     }
+  },
+  "react-native-google-mobile-ads": {
+    "ios_app_id": "ca-app-pub-3399938065938082~3454873049"
   }
 }

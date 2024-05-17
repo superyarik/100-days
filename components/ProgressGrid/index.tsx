@@ -1,6 +1,6 @@
 import Colors from '@/constants/Colors';
 import { Goal, Progress } from '@/watermelon/models';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import {
   ActivityIndicator,
@@ -11,7 +11,7 @@ import {
 } from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
-import { findHardModeFailure } from '@/lib/utils';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -27,7 +27,6 @@ export function ProgressGrid({
   setSelectedCell,
   setEditingProgress,
   setCanDeleteEditingProgress,
-  clearProgress,
 }: {
   goal: Goal | null;
   goalProgress: Progress[];
@@ -35,7 +34,6 @@ export function ProgressGrid({
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
   setCanDeleteEditingProgress: (value: boolean) => void;
-  clearProgress: (progresses: Progress[]) => void;
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
@@ -162,6 +160,18 @@ export function ProgressGrid({
               />
             );
           })}
+          <View>
+            <BannerAd
+              size={BannerAdSize.BANNER}
+              unitId='ca-app-pub-3399938065938082/5524888211'
+              onAdLoaded={() => {
+                console.log('Advert loaded');
+              }}
+              onAdFailedToLoad={(error) => {
+                console.error('Advert failed to load: ', error);
+              }}
+            />
+          </View>
           <View style={{ marginTop: 20, width: '100%' }}>
             <Text variant='headlineSmall'>{t('description')}:</Text>
             <Text variant='bodyMedium'>{description}</Text>

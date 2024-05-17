@@ -27,6 +27,8 @@ import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { DatabaseProvider } from '@nozbe/watermelondb/react';
 import { I18nProvider } from '@/contexts/I18nContext';
 
+import mobileAds from 'react-native-google-mobile-ads';
+
 import en from '@/services/i18n/en-US.json';
 import pt from '@/services/i18n/pt-PT.json';
 import ru from '@/services/i18n/ru-RU.json';
@@ -189,6 +191,20 @@ export default function RootLayout() {
         );
       }
     };
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      // Google AdMob will show any messages here that you just set up on the AdMob Privacy & Messaging page
+      // const { status: trackingStatus } =
+      //   await requestTrackingPermissionsAsync();
+      // if (trackingStatus !== 'granted') {
+      //   // Do something here such as turn off Sentry tracking, store in context/redux to allow for personalized ads, etc.
+      // }
+
+      // Initialize the ads
+      await mobileAds().initialize();
+    })();
   }, []);
 
   useEffect(() => {
