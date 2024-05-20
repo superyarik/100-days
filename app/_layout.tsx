@@ -2,7 +2,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import * as Notifications from 'expo-notifications';
 
@@ -139,18 +139,6 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  useEffect(() => {
-    if (languageLoaded && loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [languageLoaded, loaded]);
-
-  useEffect(() => {
     if (!language || languageLoaded) return;
     i18n.use(initReactI18next).init({
       compatibilityJSON: 'v3',
@@ -237,6 +225,16 @@ export default function RootLayout() {
 
     setupNotifications();
   }, [goals]);
+
+  const handleLayout = useCallback(async () => {
+    await SplashScreen.hideAsync();
+  }, [loaded, languageLoaded]);
+
+  useEffect(() => {
+    if (loaded && languageLoaded) {
+      setTimeout(handleLayout, 4000);
+    }
+  }, [loaded, languageLoaded]);
 
   if (!loaded || !languageLoaded) {
     return null;
