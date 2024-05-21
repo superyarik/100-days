@@ -10,9 +10,11 @@ import { Platform, StyleSheet, View } from 'react-native';
 import { Text, Card } from 'react-native-paper';
 
 const GoalCard = ({
+  index,
   goal,
   progresses,
 }: {
+  index: number;
   goal: Goal;
   progresses: Progress[];
 }) => {

@@ -1,7 +1,7 @@
 import Colors from '@/constants/Colors';
 import { Goal, Progress } from '@/watermelon/models';
 import { useMemo, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import {
   ActivityIndicator,
   Button,
@@ -12,6 +12,10 @@ import {
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import {
+  PermissionStatus,
+  useTrackingPermissions,
+} from 'expo-tracking-transparency';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -37,6 +41,8 @@ export function ProgressGrid({
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [status] = useTrackingPermissions();
 
   const handleCellPress = async (
     cellNumber: number,
@@ -67,6 +73,16 @@ export function ProgressGrid({
 
     return Math.max(...goalProgress.map((gp: Progress) => gp.cellNumber));
   }, [goalProgress]);
+
+  const bannerAdId = useMemo(() => {
+    return Platform.OS === 'ios'
+      ? 'ca-app-pub-3399938065938082/5524888211'
+      : 'ca-app-pub-3399938065938082/4099840497';
+  }, [Platform]);
+
+  if (status === null) {
+    return null;
+  }
 
   return (
     <View style={styles.gridContainer}>
@@ -160,10 +176,14 @@ export function ProgressGrid({
               />
             );
           })}
-          <View>
+          <View style={{ marginTop: 8 }}>
             <BannerAd
               size={BannerAdSize.BANNER}
-              unitId='ca-app-pub-3399938065938082/5524888211'
+              unitId={bannerAdId}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly:
+                  status.status === PermissionStatus.DENIED,
+              }}
               onAdLoaded={() => {
                 console.log('Advert loaded');
               }}
