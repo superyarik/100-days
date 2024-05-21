@@ -1,7 +1,7 @@
 import Colors from '@/constants/Colors';
 import { Goal, Progress } from '@/watermelon/models';
-import { useEffect, useMemo, useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { useMemo, useState } from 'react';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import {
   ActivityIndicator,
   Button,
@@ -11,7 +11,11 @@ import {
 } from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
-import { findHardModeFailure } from '@/lib/utils';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import {
+  PermissionStatus,
+  useTrackingPermissions,
+} from 'expo-tracking-transparency';
 
 const GRID_SIZE = 10;
 const MARGIN = 20;
@@ -27,7 +31,6 @@ export function ProgressGrid({
   setSelectedCell,
   setEditingProgress,
   setCanDeleteEditingProgress,
-  clearProgress,
 }: {
   goal: Goal | null;
   goalProgress: Progress[];
@@ -35,10 +38,11 @@ export function ProgressGrid({
   setSelectedCell: (value: number) => void;
   setEditingProgress: (value: Progress) => void;
   setCanDeleteEditingProgress: (value: boolean) => void;
-  clearProgress: (progresses: Progress[]) => void;
 }) {
   const { t } = useTranslation();
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [status] = useTrackingPermissions();
 
   const handleCellPress = async (
     cellNumber: number,
@@ -69,6 +73,16 @@ export function ProgressGrid({
 
     return Math.max(...goalProgress.map((gp: Progress) => gp.cellNumber));
   }, [goalProgress]);
+
+  const bannerAdId = useMemo(() => {
+    return Platform.OS === 'ios'
+      ? 'ca-app-pub-3399938065938082/5524888211'
+      : 'ca-app-pub-3399938065938082/4099840497';
+  }, [Platform]);
+
+  if (status === null) {
+    return null;
+  }
 
   return (
     <View style={styles.gridContainer}>
@@ -162,6 +176,22 @@ export function ProgressGrid({
               />
             );
           })}
+          <View style={{ marginTop: 8 }}>
+            <BannerAd
+              size={BannerAdSize.BANNER}
+              unitId={bannerAdId}
+              requestOptions={{
+                requestNonPersonalizedAdsOnly:
+                  status.status === PermissionStatus.DENIED,
+              }}
+              onAdLoaded={() => {
+                console.log('Advert loaded');
+              }}
+              onAdFailedToLoad={(error) => {
+                console.error('Advert failed to load: ', error);
+              }}
+            />
+          </View>
           <View style={{ marginTop: 20, width: '100%' }}>
             <Text variant='headlineSmall'>{t('description')}:</Text>
             <Text variant='bodyMedium'>{description}</Text>

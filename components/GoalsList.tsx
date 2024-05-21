@@ -17,8 +17,9 @@ const GoalsList = ({
       style={{ marginBottom: Platform.OS === 'ios' ? 80 : 120 }}
       keyExtractor={(item) => item.id}
       data={goals}
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <EnhancedGoalCard
+          index={index}
           setIsDeleteGoalModalVisible={setIsDeleteGoalModalVisible}
           isDeleteGoalModalVisible={isDeleteGoalModalVisible}
           goal={item}

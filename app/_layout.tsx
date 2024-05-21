@@ -2,7 +2,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import * as Notifications from 'expo-notifications';
 
@@ -37,6 +37,7 @@ import de from '@/services/i18n/de-DE.json';
 import hi from '@/services/i18n/hi-IN.json';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import mobileAds from 'react-native-google-mobile-ads';
 
 const adapter = new SQLiteAdapter({
   schema,
@@ -72,10 +73,11 @@ Notifications.setNotificationHandler({
 
 export default function RootLayout() {
   const notificationListener = useRef<Notifications.Subscription>();
-  const [notification, setNotification] = useState<any>();
+  const [_notification, setNotification] = useState<any>();
   const [language, setLanguage] = useState<string | null>();
   const [languageLoaded, setLanguageLoaded] = useState(false);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [adsLoaded, setAdsLoaded] = useState(false);
 
   const resources = {
     en,
@@ -88,7 +90,7 @@ export default function RootLayout() {
     hi,
   };
 
-  const [pushAllowed, setPushAllowed] = useState(false);
+  const [_pushAllowed, setPushAllowed] = useState(false);
 
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/Lexend.ttf'),
@@ -137,15 +139,6 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (languageLoaded && loaded) {
-      (async () => {
-        console.log('Hiding splash screen');
-        await SplashScreen.hideAsync();
-      })();
-    }
-  }, [languageLoaded, loaded]);
-
-  useEffect(() => {
     if (!language || languageLoaded) return;
     i18n.use(initReactI18next).init({
       compatibilityJSON: 'v3',
@@ -178,6 +171,12 @@ export default function RootLayout() {
           setNotification(notification)
         );
     });
+
+    const initAdmob = async () => {
+      await mobileAds().initialize();
+    };
+
+    initAdmob().then(() => setAdsLoaded(true));
 
     return () => {
       if (notificationListener.current) {
@@ -219,7 +218,17 @@ export default function RootLayout() {
     setupNotifications();
   }, [goals]);
 
-  if (!loaded || !languageLoaded) {
+  const handleLayout = useCallback(async () => {
+    await SplashScreen.hideAsync();
+  }, [loaded, languageLoaded]);
+
+  useEffect(() => {
+    if (loaded && languageLoaded && adsLoaded) {
+      setTimeout(handleLayout, 4000);
+    }
+  }, [loaded, languageLoaded, adsLoaded]);
+
+  if (!loaded || !languageLoaded || !adsLoaded) {
     return null;
   }
 
