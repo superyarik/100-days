@@ -26,6 +26,7 @@ import migrations from '@/watermelon/migrations';
 import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { DatabaseProvider } from '@nozbe/watermelondb/react';
 import { I18nProvider } from '@/contexts/I18nContext';
+import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 import mobileAds from 'react-native-google-mobile-ads';
 
@@ -74,9 +75,10 @@ Notifications.setNotificationHandler({
 
 export default function RootLayout() {
   const notificationListener = useRef<Notifications.Subscription>();
-  const [notification, setNotification] = useState<any>();
+  const [_notification, setNotification] = useState<any>();
   const [language, setLanguage] = useState<string | null>();
   const [languageLoaded, setLanguageLoaded] = useState(false);
+  const [trackingStatus, setTrackingStatus] = useState<string>('');
   const [goals, setGoals] = useState<Goal[]>([]);
 
   const resources = {
@@ -90,7 +92,7 @@ export default function RootLayout() {
     hi,
   };
 
-  const [pushAllowed, setPushAllowed] = useState(false);
+  const [_pushAllowed, setPushAllowed] = useState(false);
 
   const [loaded, error] = useFonts({
     SpaceMono: require('../assets/fonts/Lexend.ttf'),
@@ -139,6 +141,15 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
+    if (languageLoaded && loaded && Boolean(trackingStatus)) {
+      (async () => {
+        console.log('Hiding splash screen');
+        await SplashScreen.hideAsync();
+      })();
+    }
+  }, [languageLoaded, loaded, trackingStatus]);
+
+  useEffect(() => {
     if (!language || languageLoaded) return;
     i18n.use(initReactI18next).init({
       compatibilityJSON: 'v3',
@@ -184,11 +195,11 @@ export default function RootLayout() {
   useEffect(() => {
     (async () => {
       // Google AdMob will show any messages here that you just set up on the AdMob Privacy & Messaging page
-      // const { status: trackingStatus } =
-      //   await requestTrackingPermissionsAsync();
-      // if (trackingStatus !== 'granted') {
-      //   // Do something here such as turn off Sentry tracking, store in context/redux to allow for personalized ads, etc.
-      // }
+      const { status: trackingStatus } =
+        await requestTrackingPermissionsAsync();
+      if (trackingStatus) {
+        setTrackingStatus(trackingStatus);
+      }
 
       // Initialize the ads
       await mobileAds().initialize();
@@ -236,7 +247,7 @@ export default function RootLayout() {
     }
   }, [loaded, languageLoaded]);
 
-  if (!loaded || !languageLoaded) {
+  if (!loaded || !languageLoaded || !trackingStatus) {
     return null;
   }
 

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hundred Habits",
     "slug": "hundred-habits",
-    "version": "1.5.2",
+    "version": "1.6.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -12,7 +12,9 @@
       "resizeMode": "cover",
       "backgroundColor": "#FFD700"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.westmorelandcreative.hundredhabits"
@@ -27,8 +29,12 @@
     "plugins": [
       "expo-router",
       "expo-build-properties",
-      ["expo-localization"],
-      ["@morrowdigital/watermelondb-expo-plugin"],
+      [
+        "expo-localization"
+      ],
+      [
+        "@morrowdigital/watermelondb-expo-plugin"
+      ],
       [
         "expo-build-properties",
         {
@@ -38,13 +44,16 @@
           "android": {
             "kotlinVersion": "1.6.10",
             "packagingOptions": {
-              "pickFirst": ["**/libc++_shared.so"]
+              "pickFirst": [
+                "**/libc++_shared.so"
+              ]
             }
           }
         }
       ],
       "expo-localization",
-      "expo-font"
+      "expo-font",
+      "expo-tracking-transparency"
     ],
     "experiments": {
       "typedRoutes": true
