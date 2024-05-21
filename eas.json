@@ -32,7 +32,6 @@
     },
     "preview": {
       "channel": "preview",
-      "distribution": "internal",
       "autoIncrement": true,
       "ios": {
         "resourceClass": "m-medium"
