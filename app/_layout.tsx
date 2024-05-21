@@ -137,14 +137,11 @@ export default function RootLayout() {
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  useEffect(() => {
     if (languageLoaded && loaded) {
-      SplashScreen.hideAsync();
+      (async () => {
+        console.log('Hiding splash screen');
+        await SplashScreen.hideAsync();
+      })();
     }
   }, [languageLoaded, loaded]);
 
