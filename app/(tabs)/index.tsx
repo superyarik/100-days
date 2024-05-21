@@ -32,21 +32,26 @@ export default function HomeScreen() {
   const [isDeleteGoalModalVisible, setIsDeleteGoalModalVisible] =
     useState(false);
 
-  const [status, requestPermissionsAsync] = useTrackingPermissions();
+  const [status, requestPermission] = useTrackingPermissions();
 
   const toggleAddGoalModal = () => {
     setAddGoalModalVisible(!addGoalModalVisible);
   };
+
+  useEffect(() => {
+    if (
+      status?.status === PermissionStatus.UNDETERMINED &&
+      status?.canAskAgain
+    ) {
+      requestPermission();
+    }
+  }, [status]);
 
   const bannerAdId = useMemo(() => {
     return Platform.OS === 'ios'
       ? 'ca-app-pub-3399938065938082/5524888211'
       : 'ca-app-pub-3399938065938082/4099840497';
   }, [Platform]);
-
-  useEffect(() => {
-    requestPermissionsAsync();
-  }, []);
 
   const handleAddItem = async ({
     title,

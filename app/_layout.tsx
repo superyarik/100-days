@@ -77,6 +77,7 @@ export default function RootLayout() {
   const [language, setLanguage] = useState<string | null>();
   const [languageLoaded, setLanguageLoaded] = useState(false);
   const [goals, setGoals] = useState<Goal[]>([]);
+  const [adsLoaded, setAdsLoaded] = useState(false);
 
   const resources = {
     en,
@@ -175,7 +176,7 @@ export default function RootLayout() {
       await mobileAds().initialize();
     };
 
-    initAdmob();
+    initAdmob().then(() => setAdsLoaded(true));
 
     return () => {
       if (notificationListener.current) {
@@ -222,12 +223,12 @@ export default function RootLayout() {
   }, [loaded, languageLoaded]);
 
   useEffect(() => {
-    if (loaded && languageLoaded) {
+    if (loaded && languageLoaded && adsLoaded) {
       setTimeout(handleLayout, 4000);
     }
-  }, [loaded, languageLoaded]);
+  }, [loaded, languageLoaded, adsLoaded]);
 
-  if (!loaded || !languageLoaded) {
+  if (!loaded || !languageLoaded || !adsLoaded) {
     return null;
   }
 
