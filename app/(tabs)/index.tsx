@@ -1,10 +1,10 @@
-import { StatusBar, StyleSheet } from 'react-native';
+import { Platform, StatusBar, StyleSheet } from 'react-native';
 
 import { FAB } from 'react-native-paper';
 import { useDatabase } from '@nozbe/watermelondb/react';
 import EnhancedGoalsList from '@/components/GoalsList';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AddGoalModal } from '@/components/Modals/AddGoalModal';
 import Colors from '@/constants/Colors';
 import { scheduleNotificationAndGetID } from '@/services/notificationsService';
@@ -12,6 +12,11 @@ import useObserveGoals from '@/hooks/useObserveGoals';
 import { useTranslation } from 'react-i18next';
 import { Goal } from '@/watermelon/models';
 import { Model } from '@nozbe/watermelondb';
+import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
+import {
+  useTrackingPermissions,
+  PermissionStatus,
+} from 'expo-tracking-transparency';
 
 export default function HomeScreen() {
   const { t } = useTranslation();
@@ -27,9 +32,26 @@ export default function HomeScreen() {
   const [isDeleteGoalModalVisible, setIsDeleteGoalModalVisible] =
     useState(false);
 
+  const [status, requestPermission] = useTrackingPermissions();
+
   const toggleAddGoalModal = () => {
     setAddGoalModalVisible(!addGoalModalVisible);
   };
+
+  useEffect(() => {
+    if (
+      status?.status === PermissionStatus.UNDETERMINED &&
+      status?.canAskAgain
+    ) {
+      requestPermission();
+    }
+  }, [status]);
+
+  const bannerAdId = useMemo(() => {
+    return Platform.OS === 'ios'
+      ? 'ca-app-pub-3399938065938082/5524888211'
+      : 'ca-app-pub-3399938065938082/4099840497';
+  }, [Platform]);
 
   const handleAddItem = async ({
     title,
@@ -72,6 +94,11 @@ export default function HomeScreen() {
   const noGoals = useMemo(() => {
     return !goals || !goals?.length;
   }, [goals]);
+
+  if (status === null) {
+    return null;
+  }
+
   return (
     <SafeAreaView
       style={[
@@ -93,6 +120,21 @@ export default function HomeScreen() {
         />
       ) : (
         <>
+          <BannerAd
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+            unitId={bannerAdId}
+            requestOptions={{
+              requestNonPersonalizedAdsOnly:
+                status.status === PermissionStatus.DENIED ||
+                status.status === PermissionStatus.UNDETERMINED,
+            }}
+            onAdLoaded={() => {
+              console.log('Advert loaded');
+            }}
+            onAdFailedToLoad={(error) => {
+              console.error('Advert failed to load: ', error);
+            }}
+          />
           <EnhancedGoalsList
             database={database}
             setIsDeleteGoalModalVisible={setIsDeleteGoalModalVisible}

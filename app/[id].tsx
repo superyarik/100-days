@@ -236,7 +236,6 @@ export default function Page() {
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
             setCanDeleteEditingProgress={setCanDeleteEditingProgress}
-            clearProgress={clearGoalProgresses}
           />
           <AddProgressModal
             visible={activeCellNumber !== null}
