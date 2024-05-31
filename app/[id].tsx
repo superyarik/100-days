@@ -96,7 +96,7 @@ export default function Page() {
   }: {
     description: string;
   }) => {
-    const todayDate = new Date().getTime();
+    const todayDate = Date.now();
     await database.write(async () => {
       await database.get('progresses').create((progress: Model) => {
         const myProgress = progress as Progress;
