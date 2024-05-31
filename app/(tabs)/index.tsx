@@ -82,7 +82,6 @@ export default function HomeScreen() {
     goalDescription: string;
     hardMode: boolean;
   }) => {
-    console.log(data);
     setAddGoalModalVisible(false);
     handleAddItem({
       title: data.goalTitle,
