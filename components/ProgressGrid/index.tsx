@@ -138,14 +138,15 @@ export function ProgressGrid({
                 );
 
                 if (currentDate && previousDate) {
-                  previousDate.setHours(0, 0, 0, 0);
-                  currentDate.setHours(0, 0, 0, 0);
+                  previousDate.setUTCHours(0, 0, 0, 0);
+                  currentDate.setUTCHours(0, 0, 0, 0);
 
                   const timeDiff: number = Math.abs(
                     currentDate.getTime() - previousDate.getTime()
                   );
 
                   const daysDiff: number = timeDiff / (1000 * 60 * 60 * 24);
+
                   moreThanOneDay = daysDiff > 1;
                 }
               }
