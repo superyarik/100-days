@@ -19,6 +19,10 @@ export const findHardModeFailure = (
       const lastProgressDate = new Date(lastProgress.lastLoggedAt);
       const now = new Date();
 
+      // Set the time to midnight
+      lastProgressDate.setUTCHours(0, 0, 0, 0);
+      now.setUTCHours(0, 0, 0, 0);
+
       // Calculate the difference in time in milliseconds
       const timeDiff = now.getTime() - lastProgressDate.getTime();
 
