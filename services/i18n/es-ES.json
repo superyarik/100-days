@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Sí",
     "no": "No",
+    "ok": "OK",
     "delete": "Eliminar",
     "addAGoal": "Agregar un objetivo",
     "createGoal": "Crear objetivo",
@@ -63,6 +64,8 @@
     "updateYourProgress": "Actualizar tu progreso",
     "completedDate": "Completado: {{date}}",
     "errorEditingItem": "Hubo un error al editar este elemento.",
-    "alreadyChecked": "Ya has marcado este cuadro."
+    "alreadyChecked": "Ya has marcado este cuadro.",
+    "missedADayTitle": "Te perdiste un día",
+    "missedADayContent": "Tenías seleccionado el modo difícil para este objetivo y te perdiste un día. Hemos eliminado tu progreso."
   }
 }
