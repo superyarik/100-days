@@ -19,6 +19,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { Model } from '@nozbe/watermelondb';
 import { findHardModeFailure } from '@/lib/utils';
+import { FailedHardModeModal } from '@/components/Modals/FailedHardModeModal';
 
 export default function Page() {
   const { t } = useTranslation();
@@ -39,6 +40,8 @@ export default function Page() {
 
   const [editingProgress, setEditingProgress] = useState<Progress | null>(null);
 
+  const [isFailedHardModeModalVisible, setIsFailedHardModeModalVisible] =
+    useState(false);
   const [isEditGoalModalVisible, setIsEditGoalModalVisible] = useState(false);
   const [isDeleteGoalModalVisible, setIsDeleteGoalModalVisible] =
     useState(false);
@@ -165,6 +168,7 @@ export default function Page() {
       const hardModeFailed = await findHardModeFailure(goalProgress);
 
       if (hardModeFailed) {
+        setIsFailedHardModeModalVisible(true);
         clearGoalProgresses(goalProgress);
       }
 
@@ -236,6 +240,10 @@ export default function Page() {
             setSelectedCell={setActiveCellNumber}
             setEditingProgress={setEditingProgress}
             setCanDeleteEditingProgress={setCanDeleteEditingProgress}
+          />
+          <FailedHardModeModal
+            visible={isFailedHardModeModalVisible}
+            handleClose={() => setIsFailedHardModeModalVisible(false)}
           />
           <AddProgressModal
             visible={activeCellNumber !== null}
