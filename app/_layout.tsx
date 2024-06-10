@@ -224,7 +224,7 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (loaded && languageLoaded && adsLoaded) {
-      setTimeout(handleLayout, 4000);
+      setTimeout(handleLayout, 1000);
     }
   }, [loaded, languageLoaded, adsLoaded]);
 

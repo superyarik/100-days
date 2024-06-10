@@ -8,9 +8,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View } from 'react-native';
 import { Button, Snackbar, Text } from 'react-native-paper';
-import { useI18n } from '@/contexts/I18nContext';
 import { router } from 'expo-router';
 import { Model } from '@nozbe/watermelondb';
+import * as Application from 'expo-application';
 
 export default function TabTwoScreen() {
   const { t } = useTranslation();
@@ -112,6 +112,9 @@ export default function TabTwoScreen() {
       >
         {t('language_one')}
       </Button>
+      <Text variant='titleSmall'>
+        Version {Application.nativeApplicationVersion}
+      </Text>
       <DeleteAllModal
         visible={isDeleteAllModalVisible}
         handleClose={() => setIsDeleteAllModalVisible(false)}
