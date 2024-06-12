@@ -2,6 +2,7 @@
   "translation": {
     "yes": "Yes",
     "no": "No",
+    "ok": "OK",
     "delete": "Delete",
     "addAGoal": "Add a goal",
     "createGoal": "Create goal",
@@ -63,6 +64,8 @@
     "updateYourProgress": "Update your progress",
     "completedDate": "Completed: {{date}}",
     "errorEditingItem": "There was an error editing this item.",
-    "alreadyChecked": "You've already checked this square."
+    "alreadyChecked": "You've already checked this square.",
+    "missedADayTitle": "You missed a day",
+    "missedADayContent": "You had hard mode selected for this goal and missed a day. We've deleted your progress."
   }
 }
