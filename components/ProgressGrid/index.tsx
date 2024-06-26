@@ -11,7 +11,6 @@ import {
 } from 'react-native-paper';
 import { ProgressSquare } from './ProgressSquare';
 import { useTranslation } from 'react-i18next';
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import {
   PermissionStatus,
   useTrackingPermissions,
@@ -73,12 +72,6 @@ export function ProgressGrid({
 
     return Math.max(...goalProgress.map((gp: Progress) => gp.cellNumber));
   }, [goalProgress]);
-
-  const bannerAdId = useMemo(() => {
-    return Platform.OS === 'ios'
-      ? 'ca-app-pub-3399938065938082/5524888211'
-      : 'ca-app-pub-3399938065938082/4099840497';
-  }, [Platform]);
 
   if (status === null) {
     return null;
@@ -177,22 +170,6 @@ export function ProgressGrid({
               />
             );
           })}
-          <View style={{ marginTop: 8 }}>
-            <BannerAd
-              size={BannerAdSize.BANNER}
-              unitId={bannerAdId}
-              requestOptions={{
-                requestNonPersonalizedAdsOnly:
-                  status.status === PermissionStatus.DENIED,
-              }}
-              onAdLoaded={() => {
-                console.log('Advert loaded');
-              }}
-              onAdFailedToLoad={(error) => {
-                console.error('Advert failed to load: ', error);
-              }}
-            />
-          </View>
           <View style={{ marginTop: 20, width: '100%' }}>
             <Text variant='headlineSmall'>{t('description')}:</Text>
             <Text variant='bodyMedium'>{description}</Text>

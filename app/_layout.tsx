@@ -37,7 +37,6 @@ import de from '@/services/i18n/de-DE.json';
 import hi from '@/services/i18n/hi-IN.json';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import mobileAds from 'react-native-google-mobile-ads';
 
 const adapter = new SQLiteAdapter({
   schema,
@@ -172,11 +171,6 @@ export default function RootLayout() {
         );
     });
 
-    const initAdmob = async () => {
-      await mobileAds().initialize();
-    };
-
-    initAdmob().then(() => setAdsLoaded(true));
 
     return () => {
       if (notificationListener.current) {

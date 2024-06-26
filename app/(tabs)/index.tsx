@@ -12,7 +12,6 @@ import useObserveGoals from '@/hooks/useObserveGoals';
 import { useTranslation } from 'react-i18next';
 import { Goal } from '@/watermelon/models';
 import { Model } from '@nozbe/watermelondb';
-import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads';
 import {
   useTrackingPermissions,
   PermissionStatus,
@@ -46,12 +45,6 @@ export default function HomeScreen() {
       requestPermission();
     }
   }, [status]);
-
-  const bannerAdId = useMemo(() => {
-    return Platform.OS === 'ios'
-      ? 'ca-app-pub-3399938065938082/5524888211'
-      : 'ca-app-pub-3399938065938082/4099840497';
-  }, [Platform]);
 
   const handleAddItem = async ({
     title,
@@ -119,21 +112,6 @@ export default function HomeScreen() {
         />
       ) : (
         <>
-          <BannerAd
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-            unitId={bannerAdId}
-            requestOptions={{
-              requestNonPersonalizedAdsOnly:
-                status.status === PermissionStatus.DENIED ||
-                status.status === PermissionStatus.UNDETERMINED,
-            }}
-            onAdLoaded={() => {
-              console.log('Advert loaded');
-            }}
-            onAdFailedToLoad={(error) => {
-              console.error('Advert failed to load: ', error);
-            }}
-          />
           <EnhancedGoalsList
             database={database}
             setIsDeleteGoalModalVisible={setIsDeleteGoalModalVisible}
