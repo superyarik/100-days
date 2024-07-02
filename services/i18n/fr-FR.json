@@ -66,6 +66,9 @@
     "errorEditingItem": "Une erreur s'est produite lors de la modification de cet élément.",
     "alreadyChecked": "Vous avez déjà coché cette case.",
     "missedADayTitle": "Tu as manqué un jour",
-    "missedADayContent": "Tu avais sélectionné le mode difficile pour cet objectif et tu as manqué un jour. Nous avons supprimé ta progression."
+    "missedADayContent": "Tu avais sélectionné le mode difficile pour cet objectif et tu as manqué un jour. Nous avons supprimé ta progression.",
+    "hey": "Salut!",
+    "didYouCompleteGoalNameToday": "As-tu atteint {{goalName}} aujourd'hui ?",
+    "didYouCompleteGoalToday": "As-tu atteint ton objectif aujourd'hui ?"
   }
 }

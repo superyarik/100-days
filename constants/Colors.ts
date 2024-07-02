@@ -11,8 +11,8 @@ export default {
     error: '#FF0000',
 
     // Neu Brutalist
-    primary: '#FFD700',
-    secondary: '#FF00F5',
+    primary: '#1a9bc9',
+    secondary: '#60c978',
     tertiary: '#FF4911',
     quaternary: '#3300FF',
     quinary: '#2FFF2F',

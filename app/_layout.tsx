@@ -15,7 +15,6 @@ import {
   requestPermissionsAsync,
 } from '@/services/notificationsService';
 import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
 import * as Localization from 'expo-localization';
 
 import { AppState, Platform } from 'react-native';
@@ -27,14 +26,7 @@ import SQLiteAdapter from '@nozbe/watermelondb/adapters/sqlite';
 import { DatabaseProvider } from '@nozbe/watermelondb/react';
 import { I18nProvider } from '@/contexts/I18nContext';
 
-import en from '@/services/i18n/en-US.json';
-import pt from '@/services/i18n/pt-PT.json';
-import ru from '@/services/i18n/ru-RU.json';
-import zh from '@/services/i18n/zh-CN.json';
-import es from '@/services/i18n/es-ES.json';
-import fr from '@/services/i18n/fr-FR.json';
-import de from '@/services/i18n/de-DE.json';
-import hi from '@/services/i18n/hi-IN.json';
+import { initializeI18n } from '@/lib/i18n';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -76,18 +68,7 @@ export default function RootLayout() {
   const [language, setLanguage] = useState<string | null>();
   const [languageLoaded, setLanguageLoaded] = useState(false);
   const [goals, setGoals] = useState<Goal[]>([]);
-  const [adsLoaded, setAdsLoaded] = useState(false);
-
-  const resources = {
-    en,
-    pt,
-    ru,
-    zh,
-    de,
-    es,
-    fr,
-    hi,
-  };
+  const [adsLoaded, setAdsLoaded] = useState(true);
 
   const [_pushAllowed, setPushAllowed] = useState(false);
 
@@ -139,13 +120,12 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (!language || languageLoaded) return;
-    i18n.use(initReactI18next).init({
-      compatibilityJSON: 'v3',
-      resources,
-      lng: language,
-      fallbackLng: 'en',
-    });
-    setLanguageLoaded(true);
+    const initI18n = async () => {
+      await initializeI18n(language);
+      setLanguageLoaded(true);
+    };
+
+    initI18n();
   }, [language, languageLoaded]);
 
   useEffect(() => {

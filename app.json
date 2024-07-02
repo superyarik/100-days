@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Hundred Habits",
+    "name": "Сто дней привычек",
     "slug": "hundred-habits",
     "version": "1.7.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "com.westmorelandcreative.hundredhabits",
+    "scheme": "ru.superyarik.hundredhabits",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.westmorelandcreative.hundredhabits",
+      "bundleIdentifier": "ru.superyarik.hundredhabits",
       "infoPlist": {
         "NSUserTrackingUsageDescription": "Разрешите этому приложению собирать данные, связанные с приложением, которые могут использоваться для отслеживания вас или вашего устройства и показа персонализированной рекламы."
       }
@@ -48,13 +48,7 @@
         }
       ],
       "expo-localization",
-      "expo-font",
-      [
-        "expo-tracking-transparency",
-        {
-          "userTrackingPermission": "Разрешите этому приложению собирать данные, связанные с приложением, которые могут использоваться для отслеживания вас или вашего устройства и показа персонализированной рекламы."
-        }
-      ]
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

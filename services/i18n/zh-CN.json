@@ -65,6 +65,9 @@
     "errorEditingItem": "编辑此项时出错。",
     "alreadyChecked": "你已经检查过这个方格了。",
     "missedADayTitle": "你错过了一天",
-    "missedADayContent": "你为这个目标选择了困难模式并错过了一天。我们已删除你的进展。"
+    "missedADayContent": "你为这个目标选择了困难模式并错过了一天。我们已删除你的进展。",
+    "hey": "嘿!",
+    "didYouCompleteGoalNameToday": "你今天完成{{goalName}}了吗？",
+    "didYouCompleteGoalToday": "你今天完成你的目标了吗？"
   }
 }

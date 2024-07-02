@@ -66,6 +66,9 @@
     "errorEditingItem": "There was an error editing this item.",
     "alreadyChecked": "You've already checked this square.",
     "missedADayTitle": "You missed a day",
-    "missedADayContent": "You had hard mode selected for this goal and missed a day. We've deleted your progress."
+    "missedADayContent": "You had hard mode selected for this goal and missed a day. We've deleted your progress.",
+    "hey": "Hey!",
+    "didYouCompleteGoalNameToday": "Did you complete {{goalName}} today?",
+    "didYouCompleteGoalToday": "Did you complete your goal today?"
   }
 }

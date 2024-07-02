@@ -65,6 +65,9 @@
     "errorEditingItem": "Beim Bearbeiten dieses Elements ist ein Fehler aufgetreten.",
     "alreadyChecked": "Sie haben dieses Feld bereits markiert.",
     "missedADayTitle": "Du hast einen Tag verpasst",
-    "missedADayContent": "Du hattest den Schwierigkeitsgrad schwer für dieses Ziel ausgewählt und einen Tag verpasst. Wir haben deinen Fortschritt gelöscht."
+    "missedADayContent": "Du hattest den Schwierigkeitsgrad schwer für dieses Ziel ausgewählt und einen Tag verpasst. Wir haben deinen Fortschritt gelöscht.",
+    "hey": "Hey!",
+    "didYouCompleteGoalNameToday": "Hast du heute {{goalName}} abgeschlossen?",
+    "didYouCompleteGoalToday": "Hast du heute dein Ziel erreicht?"
   }
 }

@@ -66,6 +66,9 @@
     "errorEditingItem": "Hubo un error al editar este elemento.",
     "alreadyChecked": "Ya has marcado este cuadro.",
     "missedADayTitle": "Te perdiste un día",
-    "missedADayContent": "Tenías seleccionado el modo difícil para este objetivo y te perdiste un día. Hemos eliminado tu progreso."
+    "missedADayContent": "Tenías seleccionado el modo difícil para este objetivo y te perdiste un día. Hemos eliminado tu progreso.",
+    "hey": "¡Hola!",
+    "didYouCompleteGoalNameToday": "¿Completaste {{goalName}} hoy?",
+    "didYouCompleteGoalToday": "¿Completaste tu objetivo hoy?"
   }
 }
